@@ -1,0 +1,68 @@
+INSERT_UPDATE CSVExportConfig;code[unique=true];weightDistanceType;weightDistanceCategory
+;ideal;1;1
+;minimal;1;1
+
+INSERT_UPDATE AttributeFieldConfig;code[unique=true];fieldHeader;position;indexedAttributeDescriptorsInternal;fieldFormatterBean;fieldExtractorBean;productType(code);includedInHash[default=false];productCategory(catalogVersion(catalog(id),version),code)
+;attr_brand;brand;0;Product.manufacturerName;defaultFieldFormatter;attributeFieldExtractorStrategy;Product;
+;attr_category;category;0;Product.supercategories[0].name;defaultFieldFormatter;attributeFieldExtractorStrategy;Product;
+;attr_color;attr_color;0;ApparelStyleVariantProduct.style;defaultFieldFormatter;attributeFieldExtractorStrategy;ApparelStyleVariantProduct;
+;attr_condition;condition;0;Product.articleStatus;defaultFieldFormatter;attributeFieldExtractorStrategy;Product;
+;attr_description;description;0;Product.description;defaultFieldFormatter;attributeFieldExtractorStrategy;Product;
+;attr_gender;gender;0;ApparelProduct.genders;defaultFieldFormatter;attributeFieldExtractorStrategy;ApparelProduct;
+;attr_gtin;gtin;0;Product.ean;defaultFieldFormatter;attributeFieldExtractorStrategy;Product;
+;attr_id;id;0;Product.code;defaultFieldFormatter;attributeFieldExtractorStrategy;Product;
+;attr_price;price;0;Product.europe1Prices;minPriceRowFormatter;attributeFieldExtractorStrategy;Product;true;
+;attr_product_review_average;product_review_average;0;Product.averageRating;defaultFieldFormatter;attributeFieldExtractorStrategy;Product;
+;attr_product_review_count;product_review_count;0;Product.numberOfReviews;defaultFieldFormatter;attributeFieldExtractorStrategy;;
+;attr_size;size;0;ApparelSizeVariantProduct.size;defaultFieldFormatter;attributeFieldExtractorStrategy;ApparelSizeVariantProduct;
+;attr_tax;tax;0;Product.europe1Taxes;taxCollectionFormatter;attributeFieldExtractorStrategy;;
+;attr_title;title;0;Product.name;defaultFieldFormatter;attributeFieldExtractorStrategy;Product;
+;attr_sale_price;sale_price;0;Product.europe1Prices;minPriceRowFormatter;attributeFieldExtractorStrategy;Product;true;
+;attr_payment_accepted;payment_accepted;0;Product.deliveryModes.supportedPaymentModes.name;defaultFieldFormatter;attributeFieldExtractorStrategy;Product;
+;attr_payment_notes;payment_notes;0;Product.deliveryModes.supportedPaymentModes.description;defaultFieldFormatter;attributeFieldExtractorStrategy;Product;
+
+INSERT_UPDATE ClassificationAttributeConfig;code[unique=true];fieldHeader;position;fieldDescriptor(code);fieldFormatterBean;fieldExtractorBean;productType(code);productCategory(catalogVersion(catalog(id),version),code)
+;class_color;color;0;Colour of product, 1766;defaultFieldFormatter;classificationFieldExtractorStrategy;;
+;class_shipping_weight;shipping_weight;0;Package weight, 762;defaultFieldFormatter;classificationFieldExtractorStrategy;Product;
+
+INSERT_UPDATE SelfReferenceFieldConfig;code[unique=true];fieldHeader;position;fieldFormatterBean;fieldExtractorBean;productType(code);includedInHash[default=false];productCategory(catalogVersion(catalog(id),version),code)
+;self_availability;availability;0;totalStockLevelFieldFormatter;selfReferenceExtractorStrategy;Product;true;
+
+INSERT_UPDATE CSVExportFieldConfigRelation;source(code)[unique=true];target(code)[unique=true]
+;minimal;self_availability
+;minimal;attr_brand
+;minimal;attr_category
+;minimal;attr_condition
+;minimal;attr_description
+;minimal;attr_id
+;minimal;attr_price
+;minimal;attr_title
+;ideal;self_availability
+;ideal;attr_brand
+;ideal;attr_category
+;ideal;attr_condition
+;ideal;attr_description
+;ideal;attr_id
+;ideal;attr_price
+;ideal;attr_title
+;ideal;attr_gender
+;ideal;attr_size
+;ideal;attr_color
+;ideal;attr_product_review_count
+;ideal;attr_product_review_average
+;ideal;attr_gtin
+;ideal;attr_tax
+;ideal;class_shipping_weight
+;ideal;class_color
+;ideal;attr_sale_price
+;ideal;attr_payment_accepted
+;ideal;attr_payment_notes
+
+# API connection sample data. Needs to be adjusted in order to work. Access token needed.
+INSERT_UPDATE AccessTokenRestApiExportConnection;code[unique=true];hostName;port;accessToken;
+;AccessTokenRestApiExportConnection;stream-api.productsup.com;443;empty;
+
+INSERT_UPDATE ProductsUpApiExportCronJob;code[unique=true];exportConfig(code);catalogVersion(catalog(id),version);exportType(code);job(code);sessionLanguage(isocode);sessionUser(uid);exportConnection(code);streamId[default="empty"];chunkSize[default=0]
+;ProductsupApiExport;ideal;Default:Online;FULL;apiExportJobPerformable;en;anonymous;AccessTokenRestApiExportConnection
+;ProductsupApiDeltaExport;ideal;Default:Online;DELTA;apiExportJobPerformable;en;anonymous;AccessTokenRestApiExportConnection
+;ProductsupApiIncrementalExport;ideal;Default:Online;INCREMENTAL;apiExportJobPerformable;en;anonymous;AccessTokenRestApiExportConnection

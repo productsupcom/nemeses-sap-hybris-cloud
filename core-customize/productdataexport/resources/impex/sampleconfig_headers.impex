@@ -1,0 +1,7 @@
+INSERT_UPDATE CSVExportConfig;code[unique=true];weightDistanceType;weightDistanceCategory
+INSERT_UPDATE AttributeFieldConfig;code[unique=true];fieldHeader;position;indexedAttributeDescriptorsInternal;fieldFormatterBean;fieldExtractorBean;productType(code);includedInHash[default=false];productCategory(catalogVersion(catalog(id),version),code);
+INSERT_UPDATE ClassificationAttributeConfig;code[unique=true];fieldHeader;position;fieldDescriptor(code);fieldFormatterBean;fieldExtractorBean;productType(code);includedInHash[default=false];productCategory(catalogVersion(catalog(id),version),code)
+INSERT_UPDATE SelfReferenceFieldConfig;code[unique=true];fieldHeader;position;fieldFormatterBean;fieldExtractorBean;productType(code);includedInHash[default=false];productCategory(catalogVersion(catalog(id),version),code)
+INSERT_UPDATE CSVExportFieldConfigRelation;source(code)[unique=true];target(code)[unique=true]
+INSERT_UPDATE URLResolutionProperties;code[unique=true];encodingAttributes;subPath;secure;queryParameters;baseSite(uid)
+INSERT_UPDATE ProductsUpApiExportCronJob;code[unique=true];urlResolutionProperties(code);exportConfig(code);catalogVersion(catalog(id),version);exportType(code);job(code);sessionLanguage(isocode);sessionUser(uid);exportConnection(code);streamId;chunkSize

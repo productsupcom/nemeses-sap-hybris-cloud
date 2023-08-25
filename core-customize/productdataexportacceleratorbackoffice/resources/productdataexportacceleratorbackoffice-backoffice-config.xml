@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<config 
+    xmlns="http://www.hybris.com/cockpit/config"
+    xmlns:n="http://www.hybris.com/cockpitng/config/explorertree"
+    xmlns:y="http://www.hybris.com/cockpit/config/hybris"
+    xmlns:as="http://www.hybris.com/cockpitng/config/advancedsearch"
+    xmlns:wz="http://www.hybris.com/cockpitng/config/wizard-config"
+    xmlns:yss="http://www.hybris.com/cockpitng/config/simplesearch"
+    xmlns:list="http://www.hybris.com/cockpitng/component/listView"
+    xmlns:list-view="http://www.hybris.com/cockpitng/component/listView"
+    xmlns:editorArea="http://www.hybris.com/cockpitng/component/editorArea">
+
+    <context merge-by="type" parent="GenericItem" type="BaseSite" component="base" module="platformbackoffice">
+         <y:base>
+             <y:labels>
+                 <y:label>uid + " - " + name</y:label>
+             </y:labels>
+         </y:base>
+     </context>
+
+    <context type="URLResolutionProperties">
+        <context component="base">
+            <y:base>
+                <y:labels>
+                    <y:label>code</y:label>
+                </y:labels>
+            </y:base>
+        </context>
+
+        <context component="listview">
+            <list:list-view>
+                <list:column qualifier="code" />
+                <list:column qualifier="modifiedtime" />
+            </list:list-view>
+        </context>
+
+        <context component="simple-search">
+            <yss:simple-search>
+                <yss:field name="code" />
+            </yss:simple-search>
+        </context>
+
+        <context component="advanced-search">
+            <as:advanced-search connection-operator="AND">
+                <as:field-list>
+                    <as:field name="code" operator="contains" selected="true" />
+                    <as:field name="baseSite" operator="equal" selected="false" />
+                    <as:field editor="java.lang.Long" name="pk" operator="equal" selected="false" sortable="false" />
+                </as:field-list>
+                <as:sort-field name="code" asc="false" />
+            </as:advanced-search>
+        </context>
+
+        <context type="URLResolutionProperties" component="editor-area" merge-by="type" parent="GenericItem">
+            <editorArea:editorArea>
+                <editorArea:tab name="essentials">
+                    <editorArea:section name="essentials">
+                        <editorArea:attribute qualifier="code" />
+                        <editorArea:attribute qualifier="baseSite" />
+                    </editorArea:section>
+                    <editorArea:section name="additional">
+                        <editorArea:attribute qualifier="secure" />
+                        <editorArea:attribute qualifier="encodingAttributes" />
+                        <!--editorArea:attribute qualifier="subPath" /-->
+                        <!-- editorArea:attribute qualifier="queryParameters" /-->
+                    </editorArea:section>
+                </editorArea:tab>
+                <editorArea:tab name="dates">
+                    <editorArea:section name="dates">
+                        <editorArea:attribute qualifier="creationtime" />
+                        <editorArea:attribute qualifier="modifiedtime" />
+                    </editorArea:section>
+                </editorArea:tab>
+            </editorArea:editorArea>
+        </context>
+
+        <context type="URLResolutionProperties" component="create-wizard">
+            <wz:flow id="URLResolutionPropertiesWizard" title="create.urlresolutionproperties.title">
+                <wz:prepare id="configPrepare">
+                    <wz:initialize property="newItem" type="URLResolutionProperties"/>
+                </wz:prepare>
+                <wz:step id="step1" label="create.urlresolutionproperties.essential.label" 
+                    sublabel="create.urlresolutionproperties.essential.sublabel">
+                    <wz:content id="step1.content">
+                        <wz:property-list root="newItem">
+                            <wz:property qualifier="code" type="java.lang.String" />
+                            <wz:property qualifier="baseSite" type="BaseSite" />
+                        </wz:property-list>
+                    </wz:content>
+                    <wz:navigation id="step1.navigation">
+                        <wz:cancel />
+                        <wz:next visible="newItem.code != null and newItem.baseSite != null" />
+                        <wz:done visible="newItem.code != null and newItem.baseSite != null">
+                            <wz:save property="newItem" />
+                        </wz:done>
+                    </wz:navigation>
+                </wz:step>
+                <wz:step id="step2" label="create.urlresolutionproperties.specific.label" 
+                    sublabel="create.urlresolutionproperties.specific.sublabel">
+                    <wz:content id="step2.content">
+                        <wz:property-list root="newItem">
+                            <wz:property qualifier="secure" type="java.lang.Boolean">
+                                <wz:editor-parameter>
+                                    <wz:name>showOptionalField</wz:name>
+                                    <wz:value>false</wz:value>
+                                </wz:editor-parameter>
+                            </wz:property>
+                            <wz:property qualifier="encodingAttributes" type="java.lang.String" />
+                            <!-- wz:property qualifier="subPath" type="java.lang.String" /-->
+                            <!-- wz:property qualifier="queryParameters" type="java.lang.String" /-->
+                        </wz:property-list>
+                    </wz:content>
+                    <wz:navigation id="step2.navigation">
+                        <wz:cancel />
+                        <wz:back />
+                        <wz:done>
+                            <wz:save property="newItem" />
+                        </wz:done>
+                    </wz:navigation>
+                </wz:step>
+            </wz:flow>
+        </context>
+    </context>
+
+    <context type="ExportCronJob">
+        <context component="listview" parent="CronJob" merge-by="type">
+            <list-view:list-view>
+                <list-view:column qualifier="code" />
+                <list-view:column qualifier="itemtype" />
+                <list-view:column qualifier="job" />
+                <list-view:column qualifier="status" />
+                <list-view:column qualifier="progress" />
+                <list-view:column qualifier="result" />
+                <list-view:column qualifier="timeTable" />
+            </list-view:list-view>
+        </context>
+
+        <context component="cronjobsListView" parent="CronJob" merge-by="type">
+            <list-view:list-view>
+                <list-view:column qualifier="code"/>
+                <list-view:column qualifier="itemtype" />
+                <list-view:column qualifier="job"/>
+                <list-view:column qualifier="status"/>
+                <list-view:column qualifier="progress" />
+                <list-view:column qualifier="result"/>
+                <list-view:column qualifier="startTime"/>
+            </list-view:list-view>
+        </context>
+    </context>
+
+    <context type="ExportCronJob" parent="CronJob" merge-by="type" component="editor-area">
+        <editorArea:editorArea>
+            <editorArea:tab name="exportcronjob.tab">
+                <editorArea:section name="exportcronjob.initial" merge-mode="append">
+	                <editorArea:attribute qualifier="urlResolutionProperties">
+                        <editorArea:editor-parameter>
+                            <editorArea:name>configurableFlowConfigCtx</editorArea:name>
+                            <editorArea:value>create-wizard</editorArea:value>
+                        </editorArea:editor-parameter>
+                    </editorArea:attribute>
+
+                </editorArea:section>
+            </editorArea:tab>
+        </editorArea:editorArea>
+    </context>
+
+    <context type="ProductsUpApiExportCronJob" component="create-wizard">
+        <wz:flow id="ProductsUpApiExportCronJobWizard" title="create.productsupapiexportcronjob.title">
+            <wz:prepare id="configPrepare">
+                <wz:initialize property="newJob" type="ProductsUpApiExportCronJob" />
+            </wz:prepare>
+             <wz:step id="step3" merge-mode="append">
+                <wz:navigation id="step2.navigation">
+                    <wz:next visible="newJob.streamId != null and newJob.chunkSize != null" />
+                </wz:navigation>
+            </wz:step>
+             <wz:step id="step4" label="create.exportcronjob.optional.label" 
+                sublabel="create.exportcronjob.optional.sublabel">
+                <wz:content id="step4.content">
+                    <wz:property-list root="newJob">
+                        <wz:property qualifier="urlResolutionProperties">
+                            <wz:editor-parameter>
+                                <wz:name>createOnly</wz:name>
+                                <wz:value>false</wz:value>
+                            </wz:editor-parameter>
+                            <wz:editor-parameter>
+                                <wz:name>isNestedObjectCreationDisabled</wz:name>
+                                <wz:value>false</wz:value>
+                            </wz:editor-parameter>
+                            <wz:editor-parameter>
+                                <wz:name>editable</wz:name>
+                                <wz:value>true</wz:value>
+                            </wz:editor-parameter>
+                        </wz:property>
+                    </wz:property-list>
+                </wz:content>
+                <wz:navigation id="step4.navigation">
+                    <wz:cancel />
+                    <wz:back />
+                    <wz:done>
+                        <wz:save property="newJob" />
+                    </wz:done>
+                </wz:navigation>
+            </wz:step>
+        </wz:flow>
+    </context>
+
+</config>

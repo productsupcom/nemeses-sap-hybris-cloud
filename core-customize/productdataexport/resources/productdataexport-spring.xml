@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/util
+           http://www.springframework.org/schema/util/spring-util.xsd
+           http://www.springframework.org/schema/aop
+           http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!-- Import Export Configuration -->
+    <import resource="productdataexport-custom-spring.xml"/>
+
+    <!-- Interceptor Related -->
+
+    <bean id="exportCronJobPrepareInterceptor"
+        class="io.productsup.productdataexport.intercepting.ExportCronJobPrepareInterceptor" />
+    <bean id="exportCronJobPrepareInterceptorMapping"
+        class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+        <property name="interceptor" ref="exportCronJobPrepareInterceptor" />
+        <property name="typeCode" value="ExportCronJob" />
+    </bean>
+
+    <alias name="defaultExportContextFactory" alias="exportContextFactory"/>
+    <bean id="defaultExportContextFactory" class="io.productsup.productdataexport.managing.ExportContextFactory">
+        <constructor-arg name="exportContextClass" value="io.productsup.productdataexport.managing.ExportContext" />
+    </bean>
+
+    <bean id="productsUpApiExportCronJobValidateInterceptor"
+        class="io.productsup.productdataexport.intercepting.ProductsUpApiExportCronJobValidateInterceptor">
+        <constructor-arg name="formatterStrategyManager" ref="formatterStrategyManager" />
+        <constructor-arg name="exportContextFactory" ref="exportContextFactory" />
+        <constructor-arg name="supportedExportConnectionsProtocols">
+            <util:set value-type="io.productsup.productdataexport.enums.CSVExportProtocol">
+                <value>HTTPS</value>
+            </util:set>
+        </constructor-arg>
+    </bean>
+    <bean id="productsUpApiExportCronJobValidateInterceptorMapping"
+        class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+        <property name="interceptor" ref="productsUpApiExportCronJobValidateInterceptor" />
+        <property name="typeCode" value="ProductsUpApiExportCronJob" />
+    </bean>
+
+    <bean id="classificationAttributeConfigValidateInterceptor" 
+        class="io.productsup.productdataexport.intercepting.ClassificationAttributeConfigValidateInterceptor" />
+    <bean 
+        id="classificationAttributeConfigValidateInterceptorMapping"  
+        class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+        <property name="interceptor" ref="classificationAttributeConfigValidateInterceptor"/>
+        <property name="typeCode" value="ClassificationAttributeConfig"/>
+    </bean>
+
+    <bean id="attributeFieldConfigValidateInterceptor" 
+        class="io.productsup.productdataexport.intercepting.AttributeFieldConfigValidateInterceptor" />
+    <bean 
+        id="attributeFieldConfigValidateInterceptorMapping"  
+        class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+        <property name="interceptor" ref="attributeFieldConfigValidateInterceptor"/>
+        <property name="typeCode" value="AttributeFieldConfig"/>
+    </bean>
+
+    <bean id="csvFieldConfigValidateInterceptor" 
+        class="io.productsup.productdataexport.intercepting.CSVFieldConfigValidateInterceptor" />
+    <bean 
+        id="csvFieldConfigValidateInterceptorMapping"  
+        class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+        <property name="interceptor" ref="csvFieldConfigValidateInterceptor"/>
+        <property name="typeCode" value="CSVFieldConfig"/>
+    </bean>
+
+    <bean id="apiExportCronjobInitDefaultsInterceptor"
+        class="io.productsup.productdataexport.intercepting.ExportCronjobInitDefaultsInterceptor">
+        <constructor-arg name="flexibleSearchService" ref="flexibleSearchService" />
+        <constructor-arg name="exportJobPerformable" ref="apiExportJobPerformable" />
+    </bean>
+    <bean id="apiExportCronjobInitDefaultsInterceptorMapping"
+          class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+        <property name="interceptor" ref="apiExportCronjobInitDefaultsInterceptor"/>
+        <property name="typeCode" value="ProductsUpApiExportCronJob"/>
+    </bean>
+
+    <bean id="apiExportConnectionInitDefaultsInterceptor"
+        class="io.productsup.productdataexport.intercepting.ExportConnectionInitDefaultsInterceptor">
+        <constructor-arg name="hostName" value="stream-api.productsup.com" />
+        <constructor-arg name="port" value="443" />
+    </bean>
+    <bean id="apiExportConnectionInitDefaultsInterceptorMapping"
+          class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+        <property name="interceptor" ref="apiExportConnectionInitDefaultsInterceptor"/>
+        <property name="typeCode" value="AccessTokenRestApiExportConnection"/>
+    </bean>
+
+    <!-- Formatter strategies -->
+    <bean id="abstractFieldFormatter" abstract="true"
+        class="io.productsup.productdataexport.formatting.AbstractFieldFormatter">
+    </bean>
+
+    <bean id="defaultFieldFormatter" parent="abstractFieldFormatter"
+        class="io.productsup.productdataexport.formatting.DefaultFieldFormatterStrategy">
+        <description>Represents the default implementation of a FieldFormatterStrategy.</description>
+    </bean>
+
+    <bean id="totalStockLevelFieldFormatter" parent="abstractFieldFormatter"
+        class="io.productsup.productdataexport.formatting.TotalStockLevelFieldFormatterStrategy">
+        <description>A FieldFormatterStrategy to format the total stock level amount of a product.</description>
+        <constructor-arg name="stockService" ref="stockService" />
+    </bean>
+
+    <bean id="minPriceRowFormatter" parent="abstractFieldFormatter"
+        class="io.productsup.productdataexport.formatting.MinPriceRowFormatterStrategy">
+        <description>A FieldFormatterStrategy to format the lowest price from a Collection of PriceRowModels.</description>
+    </bean>
+
+    <bean id="taxCollectionFormatter" parent="abstractFieldFormatter"
+        class="io.productsup.productdataexport.formatting.TaxCollectionFormatterStrategy">
+        <description>A FieldFormatterStrategy to format a Collection of TaxRowModels to return a single tax value.</description>
+    </bean>
+
+    <!-- TODO: rename to localizedEnumNameFieldFormatter, but preserve backwarts compatibility -->
+    <bean id="localizedEnumNameFieldFormatterStrategy" parent="abstractFieldFormatter"
+        class="io.productsup.productdataexport.formatting.LocalizedEnumNameFieldFormatterStrategy">
+        <description>A FieldFormatterStrategy to format a enum value.</description>
+        <constructor-arg name="commonI18NService" ref="commonI18NService" />
+        <constructor-arg name="defaultEnumeration" ref="enumerationService" />
+    </bean>
+
+    <bean id="localizedClassificationAttributeValueFormatter" parent="abstractFieldFormatter"
+        class="io.productsup.productdataexport.formatting.LocalizedClassificationAttributeValueFormatterStrategy">
+        <description>A FieldFormatterStrategy to format a localized classification attribute value.</description>
+    </bean>
+
+    <!-- Extractor strategies -->
+    <bean id="attributeFieldExtractorStrategy" class="io.productsup.productdataexport.extracting.AttributeFieldExtractorStrategy">
+        <description>Represents a strategy to extract attribute values denoted by AttributeDescriptorModels.</description>
+        <constructor-arg name="modelService" ref="modelService" />
+        <constructor-arg name="commonI18NService" ref="commonI18NService" />
+        <constructor-arg name="exportValidationService" ref="exportValidationService" />
+    </bean>
+
+    <bean id="classificationFieldExtractorStrategy" class="io.productsup.productdataexport.extracting.ClassificationFieldExtractorStrategy">
+        <description>Represents a strategy to extract values related to a specific ClassificationAttributeModel.</description>
+    </bean>
+
+    <bean id="selfReferenceExtractorStrategy" class="io.productsup.productdataexport.extracting.SelfReferenceExtractorStrategy">
+        <description>Represents a strategy to extract the item itself.</description>
+    </bean>
+
+    <!-- CronJob related -->
+    <bean id="apiExportJobPerformable" class="io.productsup.productdataexport.managing.ExportJobPerformable"
+        parent="abstractJobPerformable">
+        <description>Holds logic regarding the CSV export used by a CronJob.</description>
+        <constructor-arg name="exportService" ref="apiProductExportService" />
+    </bean>
+
+    <!-- Service related -->
+    <bean id="apiProductExportService" class="io.productsup.productdataexport.managing.ApiProductExportService">
+        <description>Default service managing the CSV export of product data.</description>
+        <constructor-arg name="exportDataService" ref="apiDataService" />
+        <constructor-arg name="restApiService" ref="restApiService" />
+        <constructor-arg name="commonI18NService" ref="commonI18NService" />
+        <constructor-arg name="catalogVersionService" ref="catalogVersionService" />
+        <constructor-arg name="modelService" ref="modelService" />
+        <constructor-arg name="configurationService" ref="configurationService" />
+    </bean>
+
+    <bean id="fieldDistanceService" class="io.productsup.productdataexport.managing.FieldDistanceService">
+        <description>Service providing functionality for calculating the difference between a product and a CSV field 
+        configuration.</description>
+        <constructor-arg name="typeService" ref="typeService"/>
+    </bean>
+
+    <bean id="productDataExtractService"
+        class="io.productsup.productdataexport.managing.product.ProductDataExtractService">
+        <constructor-arg name="fieldDistanceService" ref="fieldDistanceService" />
+        <constructor-arg name="formatterStrategyManager" ref="formatterStrategyManager" />
+    </bean>
+
+    <bean id="abstractProductDataService" abstract="true"
+            class="io.productsup.productdataexport.managing.product.AbstractProductDataService">
+        <constructor-arg name="productDataDao" ref="productDataDao"/>
+        <constructor-arg name="modelService" ref="modelService" />
+        <constructor-arg name="productDataExtractService" ref="productDataExtractService" />
+        <constructor-arg name="deltaService" ref="apiProductDeltaService" />
+        <constructor-arg name="productCronjobExportHashDao" ref="productCronjobExportHashDao" />
+        <constructor-arg name="txManager" ref="txManager" />
+    </bean>
+
+    <alias name="apiProductDataService" alias="apiDataService"/>
+    <bean id="apiProductDataService" class="io.productsup.productdataexport.managing.product.ApiProductDataService"
+        parent="abstractProductDataService">
+        <description>Default service managing the API product data creation.</description>
+        <constructor-arg name="restApiService" ref="restApiService" />
+    </bean>
+
+    <bean id="formatterStrategyManager"
+        class="io.productsup.productdataexport.managing.product.FormatterStrategyManager">
+        <constructor-arg name="strict" value="${productdataexport.export.validation.strict}" />
+    </bean>
+
+    <bean id="productDataDao" class="io.productsup.productdataexport.managing.product.ProductDataDao">
+        <constructor-arg name="flexibleSearchService" ref="flexibleSearchService" />
+    </bean>
+
+    <!-- REST APi related -->
+    <alias name="restApiServicev0_2" alias="restApiService" />
+    <bean id="restApiServicev0_2" class="io.productsup.productdataexport.api.v0_2.client.RestApiServiceV02">
+        <constructor-arg name="maxRetries" value="${productdataexport.apiexport.retry.max}" />
+        <constructor-arg name="connectionTimeOut" value="${productdataexport.apiexport.connection.timeout}" />
+        <constructor-arg name="readTimeOut" value="${productdataexport.apiexport.read.timeout}" />
+        <constructor-arg name="writeTimeOut" value="${productdataexport.apiexport.write.timeout}" />
+    </bean>
+
+    <!-- Dynamic attribute handling -->
+    <bean id="indexedAttributeDescriptorFactory"
+        class="io.productsup.productdataexport.dataaccess.IndexedAttributeDescriptorFactory" />
+
+    <bean id="indexedAttributeDescriptorsAttributeHandler"
+        class="io.productsup.productdataexport.dataaccess.IndexedAttributeDescriptorsAttributeHandler">
+        <constructor-arg name="typeService" ref="typeService" />
+        <constructor-arg name="indexedAttributeDescriptorFactory" ref="indexedAttributeDescriptorFactory" />
+    </bean>
+
+    <!-- Validation Service -->
+    <alias name="defaultExportValidationService" alias="exportValidationService"/>
+    <bean 
+        id="defaultExportValidationService" 
+        class="io.productsup.productdataexport.validation.DefaultExportValidationService" >
+    </bean>
+
+    <!-- Delta -->
+    <bean id="apiProductDeltaService" class="io.productsup.productdataexport.delta.ApiProductDeltaService">
+        <constructor-arg name="productCronjobExportHashDao" ref="productCronjobExportHashDao" />
+        <constructor-arg name="algorithm" value="SHA-512" />
+    </bean>
+
+    <bean id="productCronjobExportHashDao" class="io.productsup.productdataexport.delta.ProductCronjobExportHashDao">
+        <constructor-arg name="modelService" ref="modelService" />
+    </bean>
+
+    <bean id="cronjobProgressAttributeHandler" class="io.productsup.productdataexport.CronjobProgressAttributeHandler" />
+</beans>

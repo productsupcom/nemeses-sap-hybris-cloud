@@ -1,0 +1,751 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<config
+    xmlns="http://www.hybris.com/cockpit/config"
+    xmlns:n="http://www.hybris.com/cockpitng/config/explorertree"
+    xmlns:y="http://www.hybris.com/cockpit/config/hybris"
+    xmlns:as="http://www.hybris.com/cockpitng/config/advancedsearch"
+    xmlns:wz="http://www.hybris.com/cockpitng/config/wizard-config"
+    xmlns:yss="http://www.hybris.com/cockpitng/config/simplesearch"
+    xmlns:list="http://www.hybris.com/cockpitng/component/listView"
+    xmlns:list-view="http://www.hybris.com/cockpitng/component/listView"
+    xmlns:editorArea="http://www.hybris.com/cockpitng/component/editorArea">
+
+    <!-- export to porudctsup button for standard backoffice -->
+
+    <context type="Product" component="pcmbackoffice-listviewactions">
+        <y:actions xmlns:y="http://www.hybris.com/cockpit/config/hybris">
+            <y:group qualifier="common" show-group-header="false">
+                <y:label>actiongroup.common</y:label>
+                <y:action action-id="com.hybris.cockpitng.action.delete" property="selectedObjects" triggerOnKeys="#del"/>
+                <y:action action-id="com.hybris.cockpitng.action.create" property="pageable.typeCode">
+                    <y:parameter>
+                        <y:name>triggerContext</y:name>
+                        <y:value>pcmbackoffice</y:value>
+                    </y:parameter>
+                    <y:parameter>
+                        <y:name>actionName</y:name>
+                        <y:value>label</y:value>
+                    </y:parameter>
+                </y:action>
+                <y:action action-id="com.hybris.backoffice.widgets.actions.sync" property="selectedObjects"/>
+                <y:action action-id="com.hybris.cockpitng.action.edit" property="selectedObjects" triggerOnKeys="^e">
+                    <y:parameter>
+                        <y:name>forwardSelectionToSocket</y:name>
+                        <y:value>selectedItemsToEdit</y:value>
+                    </y:parameter>
+                    <y:parameter>
+                        <y:name>forwardSelectionAs</y:name>
+                        <y:value>list</y:value>
+                    </y:parameter>
+                </y:action>
+                <y:action action-id="com.hybris.cockpitng.action.clone" property="selectedObjects"/>
+            </y:group>
+            <y:extended-group qualifier="export" show-group-header="false">
+                <y:action action-id="com.hybris.backoffice.widgets.actions.excel.export" property="pageable.typeCode">
+                    <y:parameter>
+                        <y:name>actionName</y:name>
+                        <y:value>label.export.excel</y:value>
+                    </y:parameter>
+                </y:action>
+                <y:action action-id="com.hybris.backoffice.widgets.actions.excel.exporttemplate" property="pageable.typeCode">
+                    <y:parameter>
+                        <y:name>actionName</y:name>
+                        <y:value>label.export.exceltemplate</y:value>
+                    </y:parameter>
+                </y:action>
+                <y:action action-id="com.hybris.cockpitng.listview.action.export.csv" property="exportColumnsAndData">
+                    <y:parameter>
+                        <y:name>actionName</y:name>
+                        <y:value>label.export.csv</y:value>
+                    </y:parameter>
+                </y:action>
+                <y:extended-action action-id="com.hybris.backoffice.widgets.actions.excel.export"/>
+            </y:extended-group>
+            <y:group qualifier="import" show-group-header="false">
+                <y:action action-id="com.hybris.backoffice.widgets.actions.excel.import" property="pageable.typeCode">
+                    <y:parameter>
+                        <y:name>actionName</y:name>
+                        <y:value>label.import.excel</y:value>
+                    </y:parameter>
+                </y:action>
+            </y:group>
+            <y:group>
+                <y:action action-id="io.productsup.productdataexport.backoffice.action.export" property="pageable.typeCode">
+                    <y:parameter>
+                        <y:name>actionName</y:name>
+                        <y:value>ProductsupExportAction</y:value>
+                    </y:parameter>
+                </y:action>
+            </y:group>
+        </y:actions>
+    </context>
+
+    <context component="explorer-tree" parent="auto" merge-by="module">
+        <n:explorer-tree>
+            <n:navigation-node id="hmc.group.productdataexportbackoffice.productsup">
+                <n:type-node id="ExportCronJob" code="ProductsUpApiExportCronJob" />
+                <n:type-node id="CSVExportConfig" code="CSVExportConfig" />
+                <n:type-node id="CSVFieldConfig" code="CSVFieldConfig" />
+                <n:type-node id="CSVExportConnection" code="CSVExportConnection" />
+            </n:navigation-node>
+        </n:explorer-tree>
+    </context>
+
+    <!-- BASICS -->
+
+    <context type="ComposedType" component="base">
+        <y:base>
+            <y:labels>
+                <y:label>code</y:label>
+            </y:labels>
+        </y:base>
+    </context>
+
+    <context type="AttributeDescriptor" component="base">
+        <y:base>
+            <y:labels>
+                <y:label>enclosingType?.code + ' - ' + qualifier</y:label>
+            </y:labels>
+        </y:base>
+    </context>
+
+    <context type="AttributeDescriptor" component="advanced-search">
+        <as:advanced-search connection-operator="AND">
+            <as:field-list>
+                <as:field name="qualifier" operator="contains" selected="true" />
+                <as:field editor="java.lang.Long" name="pk" operator="equal" selected="false" sortable="false" />
+                <as:field name="enclosingType" selected="true"
+                    editor="io.productsup.productdataexport.backoffice.editor.pupreferenceeditor" />
+                <as:field name="attributeType" selected="true" />
+            </as:field-list>
+            <as:sort-field name="qualifier" asc="false" />
+        </as:advanced-search>
+    </context>
+
+    <context type="ClassificationAttribute" component="base">
+        <y:base>
+            <y:labels>
+                <y:label>code</y:label>
+            </y:labels>
+        </y:base>
+    </context>
+
+    <!-- IndexedAttributeDescriptor -->
+
+    <context type="io.productsup.productdataexport.dataaccess.IndexedAttributeDescriptor" component="base">
+        <y:base>
+            <y:labels>
+                <y:label>(getDescriptor() != null ? @labelService.getObjectLabel(getDescriptor()) : '')</y:label>
+            </y:labels>
+        </y:base>
+    </context>
+
+    <!-- CSVExportConfig -->
+
+    <context type="CSVExportConfig" component="base" merge-by="type">
+        <y:base>
+            <y:labels>
+                <y:label>code</y:label>
+            </y:labels>
+        </y:base>
+    </context>
+
+    <context type="CSVExportConfig" component="listview">
+        <list:list-view>
+            <list:column qualifier="code" />
+            <list:column qualifier="modifiedtime" />
+        </list:list-view>
+    </context>
+
+    <context type="CSVExportConfig" component="simple-search">
+        <yss:simple-search>
+            <yss:field name="code" />
+        </yss:simple-search>
+    </context>
+
+    <context type="CSVExportConfig" component="advanced-search">
+        <as:advanced-search connection-operator="AND">
+            <as:field-list>
+                <as:field name="code" operator="contains" selected="true" />
+                <as:field editor="java.lang.Long" name="pk" operator="equal" selected="false" sortable="false" />
+            </as:field-list>
+            <as:sort-field name="code" asc="false" />
+        </as:advanced-search>
+    </context>
+
+    <context type="CSVExportConfig" component="editor-area" merge-by="type" parent="GenericItem">
+        <editorArea:editorArea>
+            <editorArea:tab name="essentials">
+                <editorArea:section name="essentials">
+                    <editorArea:attribute qualifier="code" />
+                </editorArea:section>
+                <editorArea:section name="fieldConfigs">
+                    <editorArea:attribute qualifier="fieldConfigs" /> 
+                </editorArea:section>
+                <editorArea:section name="weightDistance">
+                    <editorArea:attribute qualifier="weightDistanceType" />
+                    <editorArea:attribute qualifier="weightDistanceCategory" />
+                </editorArea:section>
+            </editorArea:tab>
+            <editorArea:tab name="dates">
+                <editorArea:section name="dates">
+                    <editorArea:attribute qualifier="creationtime" />
+                    <editorArea:attribute qualifier="modifiedtime" />
+                </editorArea:section>
+            </editorArea:tab>
+        </editorArea:editorArea>
+    </context>
+
+    <context type="CSVExportConfig" component="listviewactions" merge-by="type">
+        <y:actions>
+            <y:group qualifier="common">
+                <y:label>actiongroup.common</y:label>
+                <y:action action-id="com.hybris.cockpitng.action.delete" property="selectedObjects"/>
+                <y:action action-id="com.hybris.cockpitng.action.create" property="pageable.typeCode">
+                    <y:parameter>
+                        <y:name>targetComponent</y:name>
+                        <y:value>editorArea</y:value>
+                    </y:parameter>
+                    <y:parameter>
+                        <y:name>initializeEntity</y:name>
+                        <y:value>true</y:value>
+                    </y:parameter>
+                </y:action>
+                <y:action action-id="com.hybris.cockpitng.listview.action.export.csv" property="exportColumnsAndData"/>
+            </y:group>
+        </y:actions>
+    </context>  
+
+    <!-- CSVFieldConfig -->
+
+    <context type="CSVFieldConfig" component="base">
+        <y:base>
+            <y:labels>
+                <y:label>code + " - " + fieldHeader</y:label>
+            </y:labels>
+        </y:base>
+    </context>
+
+    <context type="CSVFieldConfig" component="listview">
+        <list:list-view>
+            <list:column qualifier="code" />
+            <list:column qualifier="itemtype" />
+            <list:column qualifier="fieldHeader" />
+            <list:column qualifier="modifiedtime" />
+        </list:list-view>
+    </context>
+
+    <context type="CSVFieldConfig" component="listviewactions" merge-by="type">
+        <y:actions>
+            <y:group qualifier="common">
+                <y:label>actiongroup.common</y:label>
+                <y:action action-id="com.hybris.cockpitng.action.delete" property="selectedObjects"/>
+                <y:action action-id="com.hybris.cockpitng.action.create" property="pageable.typeCode"/>
+                <y:action action-id="com.hybris.cockpitng.listview.action.export.csv" property="exportColumnsAndData"/>
+                <y:action action-id="io.productsup.productdataexport.backoffice.action.easyfieldconfigwizard"/>
+            </y:group>
+        </y:actions>
+    </context>
+
+    <context type="CSVFieldConfig" component="simple-search">
+        <yss:simple-search>
+            <yss:field name="code" />
+            <yss:field name="fieldHeader" />
+            <yss:sort-field asc="true" name="fieldHeader" />
+        </yss:simple-search>
+    </context>
+
+    <context type="CSVFieldConfig" component="advanced-search">
+        <as:advanced-search connection-operator="AND">
+            <as:field-list>
+                <as:field name="code" operator="contains" selected="true" />
+                <as:field name="fieldHeader" operator="contains" selected="true" />
+                <as:field editor="java.lang.Long" name="pk" operator="equal" selected="false" sortable="false" />
+                <as:field name="productType" selected="true"
+                    editor="io.productsup.productdataexport.backoffice.editor.pupreferenceeditor" >
+                    <as:editor-parameter>
+                        <as:name>filterBySubType</as:name>
+                        <as:value>Product</as:value>
+                    </as:editor-parameter>
+                </as:field>
+                <as:field name="productCategory" selected="true" />
+            </as:field-list>
+            <as:sort-field name="code" asc="true" />
+        </as:advanced-search>
+    </context>
+
+    <context type="CSVFieldConfig" component="editor-area" merge-by="type" parent="GenericItem">
+        <editorArea:editorArea>
+            <editorArea:tab name="essentials">
+                <editorArea:section name="essentials">
+                    <editorArea:attribute qualifier="code" />
+                    <editorArea:attribute qualifier="fieldHeader" />
+                    <editorArea:attribute qualifier="exportConfigs" />
+                </editorArea:section>
+                <editorArea:section name="filtering">
+                    <editorArea:attribute qualifier="productType"  
+                        editor="io.productsup.productdataexport.backoffice.editor.pupreferenceeditor" >
+                        <editorArea:editor-parameter>
+                            <editorArea:name>filterBySubType</editorArea:name>
+                            <editorArea:value>Product</editorArea:value>
+                        </editorArea:editor-parameter>
+                    </editorArea:attribute>
+                    <editorArea:attribute qualifier="productCategory" />
+                </editorArea:section>
+            </editorArea:tab>
+            <editorArea:tab name="tab.exportconfig">
+                <editorArea:section name="deltacheck">
+                    <editorArea:attribute qualifier="includedInHash" />
+                </editorArea:section>
+            </editorArea:tab>
+            <editorArea:tab name="dates">
+                <editorArea:section name="dates">
+                    <editorArea:attribute qualifier="creationtime" />
+                    <editorArea:attribute qualifier="modifiedtime" />
+                </editorArea:section>
+            </editorArea:tab>
+            <editorArea:tab name="hmc.administration">
+               <editorArea:section name="data" position="2" >
+                    <editorArea:attribute qualifier="fieldFormatterBean"
+                        editor="io.productsup.productdataexport.backoffice.editor.beannameeditor">
+                        <editorArea:editor-parameter>
+                            <editorArea:name>beanClass</editorArea:name>
+                            <editorArea:value>io.productsup.productdataexport.formatting.FieldFormatterStrategy</editorArea:value>
+                        </editorArea:editor-parameter>
+                    </editorArea:attribute>
+                    <editorArea:attribute qualifier="fieldExtractorBean" />
+                </editorArea:section>
+            </editorArea:tab>
+        </editorArea:editorArea>
+    </context>
+
+    <!-- AttributeFieldConfig -->
+
+    <context type="AttributeFieldConfig" parent="CSVFieldConfig" merge-by="type" component="editor-area">
+        <editorArea:editorArea>
+            <editorArea:tab name="fieldDescriptor" position="1">
+                <editorArea:section name="fieldDescriptor">
+                    <editorArea:attribute qualifier="indexedAttributeDescriptors"
+                        editor="io.productsup.productdataexport.backoffice.editor.attributedescriptorpathrenderer">
+                    </editorArea:attribute>
+                </editorArea:section>
+            </editorArea:tab>
+        </editorArea:editorArea>
+    </context>
+
+    <!-- ClassificationAttributeConfig -->
+
+    <context type="ClassificationAttributeConfig" parent="CSVFieldConfig" merge-by="type" component="editor-area">
+        <editorArea:editorArea>
+            <editorArea:tab name="fieldDescriptor" position="1">
+                <editorArea:section name="fieldDescriptor">
+                    <editorArea:attribute qualifier="fieldDescriptor" />
+                </editorArea:section>
+            </editorArea:tab>
+        </editorArea:editorArea>
+    </context>
+
+    <!-- ExportCronJob -->
+    <context type="ExportCronJob" component="base" merge-by="type" parent="CronJob">
+        <y:base>
+            <y:labels>
+                <y:label>'[' + exportConnection.protocol + ' / ' + exportType.code + '] ' + code + ' - ' + catalogVersion.catalog.name + ':' + catalogVersion.version + ((status != null and status.code != 'UNKNOWN') ? ' - ' + status : '') + (progress != null ? (' - ' + progress.code) : ((result != null and result.code != 'UNKNOWN') ? ' - ' + result : '' ))</y:label>
+                <y:shortLabel>job.code</y:shortLabel>
+            </y:labels>
+        </y:base>
+    </context>
+
+    <context type="ExportCronJob" parent="CronJob" merge-by="type" component="editor-area">
+        <editorArea:editorArea>
+
+            <editorArea:tab name="exportcronjob.tab" position="0">
+                <editorArea:section name="exportcronjob.status" position="0">
+                    <editorArea:attribute qualifier="progress" readonly="true" />
+                    <editorArea:attribute qualifier="lastSuccessfulCSVExport" readonly="true"/>
+                </editorArea:section>
+                <editorArea:section name="exportcronjob.initial">
+                    <editorArea:attribute qualifier="exportConnection" />
+                    <editorArea:attribute qualifier="exportConfig" />
+                    <editorArea:attribute qualifier="catalogVersion" />
+                </editorArea:section>
+                <editorArea:section name="exportcronjob.info" position="10">
+                    <editorArea:attribute qualifier="sessionLanguage"  />
+                    <editorArea:attribute qualifier="sessionCurrency" />
+                    <editorArea:attribute qualifier="exportType" />
+                    <editorArea:attribute qualifier="queryCount" />
+                </editorArea:section>
+            </editorArea:tab>
+        </editorArea:editorArea>
+    </context>
+
+    <context type="ProductsUpApiExportCronJob" parent="ExportCronJob" merge-by="type" component="editor-area">
+        <editorArea:editorArea>
+            <editorArea:tab name="exportcronjob.tab" position="0">
+                <editorArea:section name="productsupapiexportcronjob.required">
+                    <editorArea:attribute qualifier="streamId" />
+                    <editorArea:attribute qualifier="chunkSize" />
+                </editorArea:section>
+            </editorArea:tab>
+        </editorArea:editorArea>
+    </context>
+
+    <!-- CSVExportConnection -->
+    <context type="CSVExportConnection" component="base">
+        <y:base>
+            <y:labels>
+                <y:label>code + ' - [' + protocol + '] ' + hostName + ':' + port</y:label>
+            </y:labels>
+        </y:base>
+    </context>
+
+    <context type="CSVExportConnection" component="listview">
+        <list:list-view>
+            <list:column qualifier="code" />
+            <list:column qualifier="protocol" />
+            <list:column qualifier="hostName" />
+            <list:column qualifier="port"/>
+        </list:list-view>
+    </context>
+
+    <context type="CSVExportConnection" component="editor-area" merge-by="type" parent="GenericItem">
+        <editorArea:editorArea>
+            <editorArea:tab name="csvexportconnection.connection">
+                <editorArea:section name="csvexportconnection.connection">
+                    <editorArea:attribute qualifier="protocol" />
+                    <editorArea:attribute qualifier="hostName" description="csvexportconnection.hostname.description"/>
+                    <editorArea:attribute qualifier="port" />
+                </editorArea:section>
+            </editorArea:tab>
+            <editorArea:tab name="hmc.administration">
+                <editorArea:section name="hmc.unbound" >
+                    <editorArea:attribute qualifier="username" />
+                    <editorArea:attribute qualifier="password" editor="com.hybris.cockpitng.editor.defaultpassword" />
+                    <editorArea:attribute qualifier="accessToken" />
+                </editorArea:section>
+            </editorArea:tab>
+        </editorArea:editorArea>
+    </context>
+
+    <context type="AccessTokenRestApiExportConnection" component="editor-area" merge-by="type" parent="CSVExportConnection">
+        <editorArea:editorArea>
+            <editorArea:tab name="csvexportconnection.connection">
+                <editorArea:section name="csvexportconnection.connection">
+                    <editorArea:attribute qualifier="protocol" />
+                    <editorArea:attribute qualifier="hostName" description="csvexportconnection.hostname.description"/>
+                    <editorArea:attribute qualifier="port" />
+                </editorArea:section>
+            </editorArea:tab>
+            <editorArea:tab name="csvexportconnection.connection">
+                <editorArea:section name="csvexportconnection.credentials" position="0">
+                    <editorArea:attribute qualifier="accessToken" description="csvexportconnection.accesstoken.description" />
+                </editorArea:section>
+            </editorArea:tab>
+        </editorArea:editorArea>
+    </context>
+
+    <!--CreateWizards -->
+    <context type="AttributeFieldConfig" component="create-wizard">
+        <wz:flow id="AttributeFieldConfigWizard" title="create.attributefieldconfig.title">
+            <wz:prepare id="configPrepare">
+                <wz:initialize property="newConfig" type="AttributeFieldConfig"/>
+            </wz:prepare>
+            <wz:step id="step1" label="create.attributefieldconfig.essential.label" 
+                sublabel="create.attributefieldconfig.essential.sublabel">
+                <wz:content id="step1.content">
+                    <wz:property-list root="newConfig">
+                        <wz:property qualifier="code" type="java.lang.String" />
+                        <wz:property qualifier="fieldHeader" type="java.lang.String" />
+                    </wz:property-list>
+                </wz:content>
+                <wz:navigation id="step1.navigation">
+                    <wz:cancel />
+                    <wz:next visible="!#empty(newConfig.code) and !#empty(newConfig.fieldHeader)"/>
+                </wz:navigation>
+            </wz:step>
+            <wz:step id="step2" label="create.attributefieldconfig.descriptors.label"
+                sublabel="create.attributefieldconfig.descriptors.sublabel">
+                <wz:content id="step2.descriptors">
+                    <wz:property-list root="newConfig">
+                        <wz:property qualifier="indexedAttributeDescriptors" type="IndexedAttributeDescriptorList" 
+                        editor="io.productsup.productdataexport.backoffice.editor.attributedescriptorpathrenderer" />
+                    </wz:property-list>
+                </wz:content>
+                <wz:navigation id="step2.navigation">
+                    <wz:cancel />
+                    <wz:back />
+                    <wz:next visible="newConfig.indexedAttributeDescriptorsInternal != null" />
+                    <wz:done visible="newConfig.indexedAttributeDescriptorsInternal != null">
+                        <wz:save property="newConfig" />
+                    </wz:done>
+                </wz:navigation>
+            </wz:step>
+            <wz:step id="step3" label="create.attributefieldconfig.filtering.label"
+                sublabel="create.attributefieldconfig.filtering.sublabel">
+                <wz:content id="step3.filtering">
+                    <wz:property-list root="newConfig">
+                        <wz:property qualifier="productType" type="ComposedType" 
+                            editor="io.productsup.productdataexport.backoffice.editor.pupreferenceeditor" >
+                            <wz:editor-parameter>
+                                <wz:name>filterBySubType</wz:name>
+                                <wz:value>{#parentObject.indexedAttributeDescriptors[0].descriptor.enclosingType}</wz:value>
+                            </wz:editor-parameter>
+                        </wz:property>
+                        <wz:property qualifier="productCategory" type="Category" />
+                        <wz:property qualifier="fieldFormatterBean" type="java.lang.String"
+                            editor="io.productsup.productdataexport.backoffice.editor.beannameeditor">
+                            <wz:editor-parameter>
+                                <wz:name>beanClass</wz:name>
+                                <wz:value>io.productsup.productdataexport.formatting.FieldFormatterStrategy</wz:value>
+                            </wz:editor-parameter>
+                        </wz:property>
+                    </wz:property-list>
+                </wz:content>
+                <wz:navigation id="step3.navigation">
+                    <wz:cancel />
+                    <wz:back />
+                    <wz:done>
+                        <wz:save property="newConfig" />
+                    </wz:done>
+                </wz:navigation>
+            </wz:step>
+        </wz:flow>
+    </context>
+
+    <context type="ClassificationAttributeConfig" component="create-wizard">
+        <wz:flow id="ClassificationAttributeConfigWizard" title="create.classificationattributeconfig.title">
+            <wz:prepare id="configPrepare">
+                <wz:initialize property="newConfig" type="ClassificationAttributeConfig"/>
+            </wz:prepare>
+            <wz:step id="step1" label="create.classificationattributeconfig.essential.label" 
+                sublabel="create.classificationattributeconfig.essential.sublabel">
+                <wz:content id="step1.content">
+                    <wz:property-list root="newConfig">
+                        <wz:property qualifier="code" type="java.lang.String" />
+                        <wz:property qualifier="fieldHeader" type="java.lang.String" />
+                    </wz:property-list>
+                </wz:content>
+                <wz:navigation id="step1.navigation">
+                    <wz:cancel />
+                    <wz:next visible="!#empty(newConfig.code) and !#empty(newConfig.fieldHeader)"/>
+                </wz:navigation>
+            </wz:step>
+            <wz:step id="step2" label="create.classificationattributeconfig.descriptors.label"
+                sublabel="create.classificationattributeconfig.descriptors.sublabel">
+                <wz:content id="step2.descriptors">
+                    <wz:property-list root="newConfig">
+                        <wz:property qualifier="fieldDescriptor" type="ClassificationAttribute" />
+                    </wz:property-list>
+                </wz:content>
+                <wz:navigation id="step2.navigation">
+                    <wz:cancel />
+                    <wz:back />
+                    <wz:next visible="newConfig.fieldDescriptor != null"/>
+                    <wz:done visible="newConfig.fieldDescriptor != null">
+                        <wz:save property="newConfig" />
+                    </wz:done>
+                </wz:navigation>
+            </wz:step>
+            <wz:step id="step3" label="create.classificationattributeconfig.filtering.label"
+                sublabel="create.classificationattributeconfig.filtering.sublabel">
+                <wz:content id="step3.filtering">
+                    <wz:property-list root="newConfig">
+                        <wz:property qualifier="productType" type="ComposedType" 
+                            editor="io.productsup.productdataexport.backoffice.editor.pupreferenceeditor" >
+                            <wz:editor-parameter>
+                                <wz:name>filterBySubType</wz:name>
+                                <wz:value>Product</wz:value>
+                            </wz:editor-parameter>
+                        </wz:property>
+                        <wz:property qualifier="productCategory" type="Category" />
+                        <wz:property qualifier="fieldFormatterBean" type="java.lang.String"
+                            editor="io.productsup.productdataexport.backoffice.editor.beannameeditor">
+                            <wz:editor-parameter>
+                                <wz:name>beanClass</wz:name>
+                                <wz:value>io.productsup.productdataexport.formatting.FieldFormatterStrategy</wz:value>
+                            </wz:editor-parameter>
+                        </wz:property>
+                    </wz:property-list>
+                </wz:content>
+                <wz:navigation id="step3.navigation">
+                    <wz:cancel />
+                    <wz:back />
+                    <wz:done>
+                        <wz:save property="newConfig" />
+                    </wz:done>
+                </wz:navigation>
+            </wz:step>
+        </wz:flow>
+    </context>
+
+    <context type="SelfReferenceFieldConfig" component="create-wizard">
+        <wz:flow id="SelfReferenceFieldConfigWizard" title="create.selfreferencefieldconfig.title">
+            <wz:prepare id="configPrepare">
+                <wz:initialize property="newConfig" type="SelfReferenceFieldConfig"/>
+            </wz:prepare>
+            <wz:step id="step1" label="create.selfreferencefieldconfig.essential.label" 
+                sublabel="create.selfreferencefieldconfig.essential.sublabel">
+                <wz:content id="step1.content">
+                    <wz:property-list root="newConfig">
+                        <wz:property qualifier="code" type="java.lang.String" />
+                        <wz:property qualifier="fieldHeader" type="java.lang.String" />
+                    </wz:property-list>
+                </wz:content>
+                <wz:navigation id="step1.navigation">
+                    <wz:cancel />
+                    <wz:next visible="!#empty(newConfig.code) and !#empty(newConfig.fieldHeader)"/>
+                </wz:navigation>
+            </wz:step>
+            <wz:step id="step2" label="create.selfreferencefieldconfig.filtering.label"
+                sublabel="create.selfreferencefieldconfig.filtering.sublabel">
+                <wz:content id="step2.filtering">
+                    <wz:property-list root="newConfig">
+                        <wz:property qualifier="productType" type="ComposedType" 
+                            editor="io.productsup.productdataexport.backoffice.editor.pupreferenceeditor" >
+                            <wz:editor-parameter>
+                                <wz:name>filterBySubType</wz:name>
+                                <wz:value>Product</wz:value>
+                            </wz:editor-parameter>
+                        </wz:property>                        <wz:property qualifier="productCategory" type="Category" />
+                        <wz:property qualifier="fieldFormatterBean" type="java.lang.String"
+                            editor="io.productsup.productdataexport.backoffice.editor.beannameeditor">
+                            <wz:editor-parameter>
+                                <wz:name>beanClass</wz:name>
+                                <wz:value>io.productsup.productdataexport.formatting.FieldFormatterStrategy</wz:value>
+                            </wz:editor-parameter>
+                        </wz:property>
+                    </wz:property-list>
+                </wz:content>
+                <wz:navigation id="step3.navigation">
+                    <wz:cancel />
+                    <wz:back />
+                    <wz:done>
+                        <wz:save property="newConfig" />
+                    </wz:done>
+                </wz:navigation>
+            </wz:step>
+        </wz:flow>
+    </context>
+
+    <context type="ProductsUpApiExportCronJob" parent="ExportCronJob" component="create-wizard">
+        <wz:flow id="ProductsUpApiExportCronJobWizard" title="create.productsupapiexportcronjob.title">
+            <wz:prepare id="configPrepare">
+                <wz:initialize property="newJob" type="ProductsUpApiExportCronJob" />
+            </wz:prepare>
+            <wz:step id="step1" label="create.exportcronjob.essential.label" 
+                sublabel="create.exportcronjob.essential.sublabel">
+                <wz:content id="step1.content">
+                    <wz:property-list root="newJob">
+                        <wz:property qualifier="exportType" type="CSVExportType" />
+                        <wz:property qualifier="exportConfig" type="CSVExportConfig" />
+                        <wz:property qualifier="catalogVersion" type="CatalogVersion" />
+                        <wz:property qualifier="exportConnection" type="CSVExportConnection" />
+                    </wz:property-list>
+                </wz:content>
+                <wz:navigation id="step1.navigation">
+                    <wz:custom label="com.hybris.cockpitng.widgets.configurableflow.flow.next"
+                        handler="pupExportJobWizardHandler"
+                        visible="newJob.exportConfig != null and newJob.catalogVersion != null and newJob.exportConnection != null">
+                        <wz:parameter>
+                            <wz:name>valueName</wz:name>
+                            <wz:value>newJob</wz:value>  
+                        </wz:parameter>
+                    </wz:custom>
+                    <wz:cancel />
+                </wz:navigation>
+            </wz:step>
+            <wz:step id="step2" label="create.exportcronjob.session.label"
+                sublabel="create.exportcronjob.session.sublabel">
+                <wz:content id="step2.content">
+                    <wz:property-list root="newJob">
+                        <wz:property qualifier="sessionLanguage" type="Language" />
+                        <wz:property qualifier="sessionCurrency" type="Currency" />
+                    </wz:property-list>
+                </wz:content>
+                <wz:navigation id="step2.navigation">
+                    <wz:cancel />
+                    <wz:back />
+                    <wz:next visible="newJob.sessionLanguage != null and newJob.sessionCurrency != null" />
+                </wz:navigation>
+            </wz:step>
+             <wz:step id="step3" label="create.productsupapiexportcronjob.api.label" 
+                sublabel="create.productsupapiexportcronjob.api.sublabel">
+                <wz:content id="step2.content">
+                    <wz:property-list root="newJob">
+                        <wz:property qualifier="streamId" type="java.lang.Integer" />
+                        <wz:property qualifier="chunkSize" type="java.lang.Integer" />
+                    </wz:property-list>
+                </wz:content>
+                <wz:navigation id="step2.navigation">
+                    <wz:cancel />
+                    <wz:back />
+                    <wz:done visible="newJob.streamId != null and newJob.chunkSize != null" >
+                        <wz:save property="newJob" />
+                    </wz:done>
+                </wz:navigation>
+            </wz:step>
+        </wz:flow>
+    </context>
+
+    <context type="CSVExportConnection" component="create-wizard">
+        <wz:flow id="CSVExportConnectionWizard" title="create.csvexportconnection.title">
+            <wz:prepare id="connectionPrepare">
+                <wz:initialize property="newConnection" type="CSVExportConnection"/>
+                <wz:assign property="newConnection.hostName" value="newConnection.hostName"/>
+            </wz:prepare>
+            <wz:step id="step1" label="create.csvexportconnection.essential.label" 
+                sublabel="create.csvexportconnection.essential.sublabel">
+                <wz:content id="step1.content">
+                    <wz:property-list root="newConnection">
+                        <wz:property qualifier="code" type="java.lang.String" />
+                        <wz:property qualifier="protocol" type="CSVExportProtocol" />
+                        <wz:property qualifier="hostName" type="java.lang.String" description="csvexportconnection.hostname.description" />
+                        <wz:property qualifier="port" type="java.lang.Integer" description="csvexportconnection.port.description" />
+                        <wz:property qualifier="userName" type="java.lang.String" description="csvexportconnection.username.description" />
+                        <wz:property qualifier="password" type="java.lang.String" description="csvexportconnection.password.description" editor="com.hybris.cockpitng.editor.defaultpassword"/>
+                    </wz:property-list>
+                </wz:content>
+                <wz:navigation id="step1.navigation">
+                    <wz:cancel />
+                    <wz:done visible="!#empty(newConnection.code) and !#empty(newConnection.hostName) and newConnection.port >= 0 and !#empty(newConnection.userName) and !#empty(newConnection.password)">
+                        <wz:save property="newConnection" />
+                    </wz:done>
+                </wz:navigation>
+            </wz:step>
+        </wz:flow>
+    </context>
+
+    <context type="AccessTokenRestApiExportConnection" component="create-wizard">
+        <wz:flow id="CSVExportConnectionWizard" title="create.apiexportconnection.title">
+            <wz:prepare id="connectionPrepare">
+                <wz:initialize property="newConnection" type="AccessTokenRestApiExportConnection"/>
+            </wz:prepare>
+            <wz:step id="step1" label="create.csvexportconnection.essential.label" 
+                sublabel="create.csvexportconnection.essential.sublabel">
+                <wz:content id="step1.content">
+                    <wz:property-list root="newConnection">
+                        <wz:property qualifier="code" type="java.lang.String" />
+                        <wz:property qualifier="accessToken" type="java.lang.String" />
+                        <wz:property qualifier="hostName" type="java.lang.String" description="apiexportconnection.hostname.description" />
+                        <wz:property qualifier="port" type="java.lang.Integer" description="apiexportconnection.port.description" />
+                    </wz:property-list>
+                </wz:content>
+                <wz:navigation id="step1.navigation">
+                    <wz:cancel />
+                    <wz:done visible="!#empty(newConnection.code) and !#empty(newConnection.accessToken) and !#empty(newConnection.hostName) and newConnection.port >= 0">
+                        <wz:save property="newConnection" />
+                    </wz:done>
+                </wz:navigation>
+            </wz:step>
+        </wz:flow>
+    </context>
+
+    <context merge-by="type" parent="Descriptor" type="AttributeDescriptor" component="listview">
+        <list-view:list-view  refresh-after-object-creation="true"> 
+            <list-view:column qualifier="name" />
+            <list-view:column qualifier="qualifier" />
+            <list-view:column qualifier="attributeType" />
+            <list-view:column qualifier="enclosingType" />
+        </list-view:list-view>
+    </context>
+
+</config>

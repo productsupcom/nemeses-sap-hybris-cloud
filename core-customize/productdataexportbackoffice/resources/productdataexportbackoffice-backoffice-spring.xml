@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:cng="http://www.hybris.com/cockpitng/spring"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.hybris.com/cockpitng/spring
+           http://www.hybris.com/cockpitng/spring/cng-spring.xsd">
+
+    <bean 
+        id="productdataexportbackofficeLabelLocator" 
+        class="com.hybris.cockpitng.util.labels.ResourcesLabelLocator" 
+        scope="singleton" 
+        init-method="init" 
+        lazy-init="false">
+        <property name="location" value="/productdataexportbackoffice-backoffice-labels/"/>
+        <property name="name" value="labels"/>
+    </bean>
+
+    <bean 
+        id="attributeDescriptorCreator"
+        class="io.productsup.productdataexport.backoffice.action.AttributeDescriptorCreator">
+    </bean>
+
+    <bean 
+        id="classificationAttributeCreator"
+        class="io.productsup.productdataexport.backoffice.action.ClassificationAttributeCreator">
+    </bean>
+
+    <bean
+        id="easyWizardFieldConfigCreateHelper"
+        class="io.productsup.productdataexport.backoffice.action.EasyWizardFieldConfigCreateHelper">
+    </bean>
+
+    <alias alias="backofficeProductsupExportService" name="defaultBackofficeProductsupExportService"/>
+    <bean id="defaultBackofficeProductsupExportService"
+            class="io.productsup.productdataexport.backoffice.BackofficeProductsupExportService">
+        <property name="flexibleSearchService" ref="flexibleSearchService" />
+        <property name="cronJobService" ref="cronJobService" />
+        <property name="cockpitEventQueue" ref="cockpitEventQueue"/>
+    </bean>
+
+    <alias alias="exportCronJobLabelRenderer" name="defaultExportCronJobLabelRenderer"/>
+    <bean id="defaultExportCronJobLabelRenderer" 
+        class="io.productsup.productdataexport.backoffice.DefaultExportCronJobLabelRenderer"/>
+
+    <bean id="exportProcessItemRenderingStrategy"
+            class="io.productsup.productdataexport.backoffice.ExportProcessItemRenderingStrategy"
+            parent="defaultProcessItemRenderingStrategy">
+        <constructor-arg name="exportCronJobLabelRenderer" ref="exportCronJobLabelRenderer" />
+        <property name="order" value="50"/>
+    </bean>
+
+    <cng:map-extender bean="backofficeCronJobHistoryIncludes">
+        <cng:put key-type="java.lang.String" value-type="de.hybris.platform.servicelayer.cronjob.CronJobHistoryInclude">
+            <entry key="csvExportCronJobProcesses">
+                <bean class="de.hybris.platform.servicelayer.cronjob.CronJobHistoryInclude">
+                    <property name="cronJobTypeCode" value="ExportCronJob" />
+                </bean>
+            </entry>
+        </cng:put>
+    </cng:map-extender>
+
+    <cng:list-extender bean="processItemRenderingStrategyRegistry" getter="strategiesList" setter="strategies">
+        <cng:add value-type="com.hybris.backoffice.widgets.processes.ProcessItemRenderingStrategy">
+            <ref bean="exportProcessItemRenderingStrategy" />
+        </cng:add>
+    </cng:list-extender>
+
+    <bean id="backofficeSolrFieldSearchFacadeStrategy"
+          class="io.productsup.productdataexport.backoffice.ComposedTypeOnlySolrFieldSearchFacadeStrategy">
+        <property name="order" value="50"/>
+        <property name="commonI18NService" ref="commonI18NService"/>
+        <property name="facetSearchConfigService" ref="backofficeSolrFacetSearchConfigService"/>
+        <property name="facetSearchService" ref="backofficeFacetSearchService"/>
+        <property name="itemModelSearchDAO" ref="itemModelSearchDAO"/>
+        <property name="solrAutoSuggestService" ref="solrAutoSuggestService"/>
+        <property name="fullTextSearchDataConverter" ref="fullTextSearchDataConverter"/>
+        <property name="typeService" ref="typeService" />
+    </bean>
+
+    <alias alias="platformFieldSearchFacadeStrategy" name="nonComposedTypeRelaxedPlatformFieldSearchFacadeStrategy"/>
+    <bean id="nonComposedTypeRelaxedPlatformFieldSearchFacadeStrategy" parent="defaultPlatformFieldSearchFacadeStrategy"
+          class="io.productsup.productdataexport.backoffice.NonComposedTypeRelaxedPlatformFieldSearchFacadeStrategy">
+    </bean>
+
+    <alias alias="pupTypeUtilityService" name="defaultPupTypeUtilityService" />
+    <bean id="defaultPupTypeUtilityService" class="io.productsup.productdataexport.backoffice.PupTypeUtilityService"></bean>
+
+    <alias alias="pupSearchConditionHandler" name="defaultPupConditionHandler"/>
+    <bean id="defaultPupConditionHandler" class="io.productsup.productdataexport.backoffice.PupRESearchConditionHandler">
+        <property name="propertyValueService" ref="propertyValueService" />
+    </bean>
+
+    <bean id="pupExportJobWizardHandler" class="io.productsup.productdataexport.backoffice.PupExportJobWizardHandler">
+        <constructor-arg name="modelService" ref="modelService" />
+    </bean>
+
+    <cng:list-extender id="productExportPlatformBackofficeExceptionTranslationStrategiesExtender"
+        property="exceptionHandlers" bean="exceptionTranslationService">
+        <cng:add value-type="com.hybris.cockpitng.service.ExceptionTranslationHandler">
+            <bean class="io.productsup.productdataexport.backoffice.translation.MissingAttributeExceptionTranslationHandler">
+                <constructor-arg name="labelService" ref="labelService" />
+            </bean>
+            <bean class="io.productsup.productdataexport.backoffice.translation.MisconfiguredAttributeExceptionTranslationHandler">
+                <constructor-arg name="labelService" ref="labelService" />
+            </bean>
+        </cng:add>
+    </cng:list-extender>
+</beans>

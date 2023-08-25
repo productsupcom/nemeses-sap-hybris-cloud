@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<editor-definition 
+    id="io.productsup.productdataexport.backoffice.editor.attributedescriptorpathrenderer"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://www.hybris.com/schema/cockpitng/editor-definition.xsd">
+
+    <name>Cascading AttributeDescriptor Editor</name>
+    <description>Editor for handling index based attribute descriptor references</description>
+    <type>io.productsup.productdataexport.dataaccess.IndexedAttributeDescriptor</type>
+    <editorClassName>io.productsup.productdataexport.backoffice.editor.AttributeDescriptorPathRenderer</editorClassName>
+    
+    <sockets>
+        <input id="referenceEditorInput"/>
+        <output id="referenceEditorOutput" type="java.util.Map"/>
+        <output id="referenceSelected" type="com.hybris.cockpitng.data.TypeAwareSelectionContext"/>
+        <output id="pupReferenceSearchCtx" type="com.hybris.cockpitng.data.TypeAwareSelectionContext" />
+    </sockets>
+        
+</editor-definition>

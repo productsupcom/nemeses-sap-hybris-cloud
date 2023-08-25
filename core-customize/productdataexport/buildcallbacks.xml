@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project name="productdataexport_buildcallbacks">
+
+    <macrodef name="productdataexport_swaggerGetJava">
+        <attribute name="inputSpec" />
+        <attribute name="language" default="java" />
+        <attribute name="package" default="io.productsup.productdataexport.api.v0_2" />
+        <attribute name="templateDir" default="${ext.productdataexport.path}/swagger" />
+        <attribute name="outputDir" />
+        <sequential>
+            <echo message="Generating java models and api files. Transforming [@{inputSpec}] to [@{outputDir}] " />
+            <ymvn pom="@{templateDir}/swagger-pom.xml">
+                <arguments>
+                    <arg value="io.swagger.codegen.v3:swagger-codegen-maven-plugin:generate" />
+                    <arg value="-Dswaggercodegen.inputSpec=@{inputSpec}" />
+                    <arg value="-Dswaggercodegen.outputDir=@{outputDir}" />
+                    <arg value="-Dswaggercodegen.language=@{language}" />
+                    <arg value="-Dswaggercodegen.package=@{package}" />
+                </arguments>
+            </ymvn>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="productdataexport_cleanUp">
+        <attribute name="dirToDelete" />
+        <sequential>
+            <delete includeEmptyDirs="true" quiet="true">
+                <fileset dir="@{dirToDelete}" includes="**/*" />
+            </delete>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="productdataexport_before_build">
+        <attribute name="templateDir" default="${ext.productdataexport.path}/swagger" />
+        <attribute name="targetDir" default="${HYBRIS_TEMP_DIR}/productsup/swagger-gen" />
+        <attribute name="inputSpec" default="@{templateDir}/stream-api-oas3-definition_0_2.yaml" />
+        <sequential>
+            <productdataexport_cleanUp dirToDelete="@{targetDir}" />
+            <productdataexport_swaggerGetJava inputSpec="@{inputSpec}" outputDir="@{targetDir}" />
+            <move todir="${ext.productdataexport.path}/gensrc">
+                <fileset dir="@{targetDir}/src/main/java"/>
+            </move>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="productdataexport_before_production">
+        <attribute name="fileName" default="${ext.productdataexport.path}/resources/productdataexport-custom-spring.xml" />
+        <sequential>
+            <echo message="Refresh @{fileName} from git ..." />
+            <exec executable="cmd" osfamily="windows">
+                <arg value="/c"/>
+                <arg value="git checkout @{fileName}" />
+            </exec>
+            <exec executable="/bin/sh" osfamily="unix">
+                <arg value="-c" />
+                <arg value="git checkout @{fileName}" />
+            </exec>
+        </sequential>
+    </macrodef>
+</project>

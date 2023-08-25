@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.hybris.com/schema/cockpitng/widgets.xsd">
+
+    <widget-connection inputId="input" outputId="nodeSelected" sourceWidgetId="productdataexportacceleratorbackoffice-explorer-tree" targetWidgetId="productdataexportacceleratorbackoffice-tree-node-adapter"/>
+    <widget-connection inputId="genericInput" outputId="true" sourceWidgetId="productdataexportacceleratorbackoffice-tree-node-adapter" targetWidgetId="productdataexportacceleratorbackoffice-typecode-extractor"/>
+    <widget-connection inputId="genericInput" outputId="true" sourceWidgetId="productdataexportacceleratorbackoffice-tree-node-adapter" targetWidgetId="productdataexportacceleratorbackoffice-search-enabler"/>
+    <widget-connection inputId="genericInput" outputId="false" sourceWidgetId="productdataexportacceleratorbackoffice-tree-node-adapter" targetWidgetId="productdataexportacceleratorbackoffice-search-disabler"/>
+    <widget-connection inputId="type" outputId="genericOutput" sourceWidgetId="productdataexportacceleratorbackoffice-typecode-extractor" targetWidgetId="productdataexportacceleratorbackoffice-search-logic"/>
+    <widget-connection inputId="enabled" outputId="genericOutput" sourceWidgetId="productdataexportacceleratorbackoffice-search-enabler" targetWidgetId="productdataexportacceleratorbackoffice-text-search"/>
+    <widget-connection inputId="enabled" outputId="genericOutput" sourceWidgetId="productdataexportacceleratorbackoffice-search-disabler" targetWidgetId="productdataexportacceleratorbackoffice-text-search"/>
+    <widget-connection inputId="searchtext" outputId="query" sourceWidgetId="productdataexportacceleratorbackoffice-text-search" targetWidgetId="productdataexportacceleratorbackoffice-search-logic"/>
+    <widget-connection inputId="pageable" outputId="pageable" sourceWidgetId="productdataexportacceleratorbackoffice-search-logic" targetWidgetId="productdataexportacceleratorbackoffice-simple-list"/>
+
+</widgets>

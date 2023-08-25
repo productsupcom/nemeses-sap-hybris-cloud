@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="beans.xsd">
+
+    <bean class="io.productsup.productdataexport.dataaccess.IndexedAttributeDescriptor">
+        <property name="descriptor" type="de.hybris.platform.core.model.type.AttributeDescriptorModel" />
+        <property name="index" type="java.lang.Integer" />
+        <property name="localized" type="java.lang.Boolean" />
+        <property name="qualifier" type="java.lang.String" />
+        <property name="name" type="java.lang.String" />
+        <property name="lastType" type="de.hybris.platform.core.model.type.ComposedTypeModel" />
+        <property name="enclosingTypeCode" type="java.lang.String" />
+        <property name="readable" type="java.lang.Boolean" />
+        <property name="privateAccess" type="java.lang.Boolean" />
+    </bean>
+
+</beans>

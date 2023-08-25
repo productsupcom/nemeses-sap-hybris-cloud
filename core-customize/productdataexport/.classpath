@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="/platform"/>
+	<classpathentry kind="src" output="eclipsebin/classes" path="src"/>
+	<classpathentry kind="src" output="eclipsebin/classes" path="testsrc"/>
+	<classpathentry kind="src" output="eclipsebin/classes" path="gensrc"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/basecommerce"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="resources"/>
+	<classpathentry kind="lib" path="lib/logging-interceptor-2.7.5.jar"/>
+	<classpathentry kind="lib" path="lib/okhttp-2.7.5.jar"/>
+	<classpathentry kind="lib" path="lib/okio-1.6.0.jar"/>
+	<classpathentry kind="lib" path="lib/swagger-annotations-2.0.0.jar"/>
+	<classpathentry kind="output" path="eclipsebin/notused"/>
+</classpath>

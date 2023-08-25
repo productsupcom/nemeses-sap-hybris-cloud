@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widgets>
+   <widget id="io.productsup.productdataexport.backoffice.pupreferenceadvancedsearchgroup" widgetDefinitionId="io.productsup.productdataexport.backoffice.pupreferenceadvancedsearch" slotId="composedRootSlot" template="false">
+        <widget id="referenceAdvancedSearch" widgetDefinitionId="io.productsup.productdataexport.backoffice.pupadvancedsearch" slotId="advancedSearch" template="false">
+            <widget id="referenceAdvancedSearchEngine"
+                    widgetDefinitionId="com.hybris.cockpitng.widgets.common.advancedsearchengine"
+                    slotId="cockpitWidgetChildrenInvisible" template="false">
+                <setting key="defaultPageSize" type="Integer">50</setting>
+                <virtual-sockets/>
+            </widget>
+            <setting key="actionSlotComponentName" value="_empty"/>
+            <setting key="widgetStyleClass" type="java.lang.String">yw-com_hybris_cockpitng_advancedsearch</setting>
+            <virtual-sockets/>
+        </widget>
+        <widget id="referenceCollectionBrowser" widgetDefinitionId="com.hybris.cockpitng.collectionBrowser" slotId="collectionBrowser" template="false">
+            <setting key="multiSelect" type="Boolean">true</setting>
+            <setting key="actionSlotComponentId" type="java.lang.String">referenceSearchListViewActions</setting>
+            <setting key="socketDataType_$T" type="java.lang.String">java.lang.Object</setting>
+            <virtual-sockets/>
+        </widget>
+        <setting key="widgetStyleClass" type="java.lang.String">yw-com_hybris_cockpitng_backoffice_referenceadvancedsearch</setting>
+        <virtual-sockets/>
+    </widget>
+
+    <widget-connection sourceWidgetId="io.productsup.productdataexport.backoffice.pupreferenceadvancedsearchgroup" outputId="pupAdvancedSearchInitCtx" targetWidgetId="referenceAdvancedSearch" inputId="initContext"/>
+    <widget-connection sourceWidgetId="referenceAdvancedSearch" outputId="searchData" targetWidgetId="referenceAdvancedSearchEngine" inputId="searchData"/>
+    <widget-connection sourceWidgetId="referenceAdvancedSearchEngine" outputId="pageable" targetWidgetId="referenceCollectionBrowser" inputId="pageable"/>
+    <widget-connection sourceWidgetId="referenceAdvancedSearchEngine" outputId="pageable" targetWidgetId="io.productsup.productdataexport.backoffice.pupreferenceadvancedsearchgroup" inputId="resetSelection"/>
+    <widget-connection sourceWidgetId="referenceCollectionBrowser" outputId="selectedItems" targetWidgetId="io.productsup.productdataexport.backoffice.pupreferenceadvancedsearchgroup" inputId="selectedItems"/>
+    <widget-connection sourceWidgetId="referenceCollectionBrowser" outputId="selectedItem" targetWidgetId="io.productsup.productdataexport.backoffice.pupreferenceadvancedsearchgroup" inputId="selectedItem"/>
+    <widget-connection sourceWidgetId="io.productsup.productdataexport.backoffice.pupreferenceadvancedsearchgroup" outputId="selectedReferences" targetWidgetId="io.productsup.productdataexport.backoffice.pupreferenceadvancedsearchgroup" inputId="selectedReferencesOutputForward"/>
+    <widget-connection sourceWidgetId="io.productsup.productdataexport.backoffice.pupreferenceadvancedsearchgroup" outputId="cancel" targetWidgetId="io.productsup.productdataexport.backoffice.pupreferenceadvancedsearchgroup" inputId="cancelOutputForward"/>
+</widgets>

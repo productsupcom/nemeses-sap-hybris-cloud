@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/aop
+           http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <alias name="acceleratorExportContextFactory" alias="exportContextFactory"/>
+    <bean id="acceleratorExportContextFactory"
+        class="io.productsup.productdataexport.managing.ExportContextFactory">
+        <constructor-arg name="exportContextClass"
+            value="io.productsup.productdataexport.accelerator.managing.AcceleratorExportContext" />
+    </bean>
+
+    <bean id="acceleratorProductModelUrlResolver" 
+        class="io.productsup.productdataexport.accelerator.resolving.AcceleratorProductModelUrlResolver">
+        <description>Accelerator specific URL resolver for product models.</description>
+        <constructor-arg name="siteBaseUrlResolutionService" ref="siteBaseUrlResolutionService" />
+        <constructor-arg name="urlResolver" ref="defaultProductModelUrlResolver" />
+        <constructor-arg name="baseSiteService" ref="baseSiteService" />
+        <constructor-arg name="modelService" ref="modelService" />
+    </bean>
+
+    <bean id="acceleratorMediaModelUrlResolver" 
+        class="io.productsup.productdataexport.accelerator.resolving.AcceleratorMediaModelUrlResolver">
+        <description>Accelerator specific URL resolver for media models.</description>
+        <constructor-arg name="siteBaseUrlResolutionService" ref="siteBaseUrlResolutionService" />
+        <constructor-arg name="mediaService" ref="mediaService" />
+        <constructor-arg name="modelService" ref="modelService" />
+    </bean>
+
+    <bean id="acceleratorMediaFieldFormatter" 
+        class="io.productsup.productdataexport.accelerator.formatting.AcceleratorMediaFieldFormatterStrategy">
+        <description>Represents the specialized FieldFormatterStrategy for formatting MediaModels.</description>
+        <constructor-arg name="csvExportURLResolver" ref="acceleratorMediaModelUrlResolver" />
+    </bean>
+
+    <bean id="acceleratorProductFieldFormatter" 
+        class="io.productsup.productdataexport.accelerator.formatting.AcceleratorProductFieldFormatterStrategy">
+        <description>Represents the specialized FieldFormatterStrategy for formatting MediaModels.</description>
+        <constructor-arg name="csvExportURLResolver" ref="acceleratorProductModelUrlResolver" />
+    </bean>
+
+    <bean id="acceleratorAgeGroupFormatter" 
+        class="io.productsup.productdataexport.accelerator.formatting.AcceleratorAgeGroupFormatterStrategy">
+        <description>Represents the specialized FieldFormatterStrategy for formatting CategoryModels to retrieve the 
+        age group of a product.</description>
+    </bean>
+
+    <!-- Interceptor related -->
+
+    <bean id="urlResolutionPropertiesValidateInterceptor" 
+        class="io.productsup.productdataexport.accelerator.intercepting.URLResolutionPropertiesValidateInterceptor" />
+    <bean 
+        id="urlResolutionPropertiesValidateInterceptorMapping"
+        class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+        <property name="interceptor" ref="urlResolutionPropertiesValidateInterceptor"/>
+        <property name="typeCode" value="URLResolutionProperties"/>
+    </bean>
+
+</beans>

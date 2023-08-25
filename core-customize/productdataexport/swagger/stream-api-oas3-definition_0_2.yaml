@@ -1,0 +1,1058 @@
+openapi: 3.0.3
+info:
+  title: Productsup Stream API
+  description: |
+    Stream API - The new way of pushing data to Productsup
+
+    With our new Stream API we provide a high-performance and flexible API solution to allow clients to send
+    and import large data sets into the Productsup Platform in effective and user friendly manner.
+
+    For more information check out our public api documentation!
+  version: "0.2"
+externalDocs:
+  description: Productsup Stream API End User documentation
+  url: http://api-docs.productsup.io/
+servers:
+  - url: https://stream-api.productsup.com
+    description: Production environment
+tags:
+  - name: Products
+    description: Product upload endpoints
+  - name: Batches
+    description: Batch endpoints
+  - name: Stream management
+    description: Stream management endpoints
+
+paths:
+
+  # Streams > Management
+
+  /streams:
+    post:
+      summary: Create a stream
+      tags:
+        - Stream management
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        $ref: '#/components/requestBodies/StreamCreation'
+      responses:
+        201:
+          $ref: '#/components/responses/StreamCreated'
+        401:
+          $ref: '#/components/responses/AuthorizationError'
+        403:
+          $ref: '#/components/responses/StreamValidationErrorWithId'
+        409:
+          $ref: '#/components/responses/StreamValidationError'
+    get:
+      summary: Get list of streams
+      tags:
+        - Stream management
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - in: query
+          name: 'page[limit]'
+          required: false
+          schema:
+            type: integer
+            default: 10
+            minimum: 1
+            maximum: 10
+          description: The number of streams to return in a result list.
+        - in: query
+          name: 'page[offset]'
+          required: false
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+          description: The number of streams to skip before collecting the result list.
+      responses:
+        200:
+          $ref: '#/components/responses/StreamReadList'
+        401:
+          $ref: '#/components/responses/AuthorizationError'
+    head:
+      summary: Requests headers for list of streams
+      tags:
+        - Stream management
+      security:
+        - bearerAuth: [ ]
+      responses:
+        200:
+          description: ''
+        401:
+          $ref: '#/components/responses/AuthorizationError'
+
+  /streams/{streamId}:
+    parameters:
+      - $ref: '#/components/parameters/streamId'
+    get:
+      summary: Get details about a specific Stream
+      tags:
+        - Stream management
+      security:
+        - bearerAuth: [ ]
+      responses:
+        200:
+          $ref: '#/components/responses/StreamReadSingle'
+        401:
+          $ref: '#/components/responses/AuthorizationError'
+        404:
+          $ref: '#/components/responses/StreamNotFound'
+    head:
+      summary: Requests headers for specific Stream
+      tags:
+        - Stream management
+      security:
+        - bearerAuth: [ ]
+      responses:
+        200:
+          description: ''
+        401:
+          $ref: '#/components/responses/AuthorizationError'
+        404:
+          $ref: '#/components/responses/StreamNotFound'
+    patch:
+      summary: Update a Streams attributes
+      tags:
+        - Stream management
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        $ref: '#/components/requestBodies/StreamUpdate'
+      responses:
+        200:
+          $ref: '#/components/responses/StreamReadSingle'
+        401:
+          $ref: '#/components/responses/AuthorizationError'
+        404:
+          $ref: '#/components/responses/StreamNotFound'
+        409:
+          $ref: '#/components/responses/StreamValidationError'
+    delete:
+      summary: Remove a Stream
+      tags:
+        - Stream management
+      security:
+        - bearerAuth: [ ]
+      responses:
+        204:
+          description: 'done'
+        401:
+          $ref: '#/components/responses/AuthorizationError'
+        404:
+          $ref: '#/components/responses/StreamNotFound'
+        409:
+          $ref: '#/components/responses/StreamValidationError'
+
+  # Streams > Upload
+
+  /streams/{streamId}/products:
+    parameters:
+      - $ref: '#/components/parameters/streamId'
+    post:
+      summary: Upload products to a stream
+      description: |
+        With this endpoint product data can be send to a stream and also removed from a stream. For a product the only
+        enforced column is the `id`-column. This should be a unique identifier, as it's used to create products and to
+        apply permutations of future updates to the same product.
+
+        Note: We do not differentiate functionality between the POST, PUT and PATCH methods. The products endpoint
+        is not REST compatible so we do not foresee issues in the future.
+      tags:
+        - Products
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        $ref: '#/components/requestBodies/ProductUpload'
+      responses:
+        202:
+          $ref: '#/components/responses/BatchCreated'
+        400:
+          $ref: '#/components/responses/EmptyPayloadError'
+        401:
+          $ref: '#/components/responses/AuthorizationError'
+        404:
+          $ref: '#/components/responses/StreamNotFound'
+        422:
+          $ref: '#/components/responses/BatchCreated'
+    put:
+      summary: Upload products to a stream
+      description: See POST method
+      tags:
+        - Products
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        $ref: '#/components/requestBodies/ProductUpload'
+      responses:
+        202:
+          $ref: '#/components/responses/BatchCreated'
+        400:
+          $ref: '#/components/responses/EmptyPayloadError'
+        401:
+          $ref: '#/components/responses/AuthorizationError'
+        404:
+          $ref: '#/components/responses/StreamNotFound'
+        422:
+          $ref: '#/components/responses/BatchCreated'
+    patch:
+      summary: Upload products to a stream
+      description: See POST method
+      tags:
+        - Products
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        $ref: '#/components/requestBodies/ProductUpload'
+      responses:
+        202:
+          $ref: '#/components/responses/BatchCreated'
+        400:
+          $ref: '#/components/responses/EmptyPayloadError'
+        401:
+          $ref: '#/components/responses/AuthorizationError'
+        404:
+          $ref: '#/components/responses/StreamNotFound'
+        422:
+          $ref: '#/components/responses/BatchCreated'
+    delete:
+      summary: Delete products
+      description: |
+        The DELETE method on this endpoint allows you to delete a series of selected products
+        or all products and their attributes.
+
+        Note: OAS 3 does not allow the DELETE request to have a request body. This endpoint does require you to send a request body, exception when appending the query parameter and value `all=true` to this endpoint.
+      tags:
+        - Products
+      parameters:
+        - in: query
+          name: all
+          required: false
+          schema:
+            type: string
+            enum: [ 'true' ]
+          description: Delete all products including their attributes.
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        $ref: '#/components/requestBodies/ProductDelete'
+      responses:
+        202:
+          $ref: '#/components/responses/BatchCreated'
+        401:
+          $ref: '#/components/responses/AuthorizationError'
+        404:
+          $ref: '#/components/responses/StreamNotFound'
+        422:
+          $ref: '#/components/responses/BatchCreated'
+  /streams/{streamId}/products/{productId}:
+    parameters:
+      - $ref: '#/components/parameters/streamId'
+      - $ref: '#/components/parameters/productId'
+    delete:
+      summary: Delete a single product
+      description: |
+        The DELETE method on this endpoint allows you to delete a single product. No request body is required, as the
+        product id is retrieved from the URL.
+        If the product id does not exist, we accept the request anyway and new Batch ID will be generated. However when
+        requesting the status of the batch, it will indicate failure.
+      tags:
+        - Products
+      security:
+        - bearerAuth: [ ]
+      responses:
+        202:
+          $ref: '#/components/responses/BatchCreated'
+        401:
+          $ref: '#/components/responses/AuthorizationError'
+        404:
+          $ref: '#/components/responses/StreamNotFound'
+        422:
+          $ref: '#/components/responses/BatchCreated'
+
+  # Streams > Batches
+
+  /streams/{streamId}/batches/{batchId}:
+    parameters:
+      - $ref: '#/components/parameters/streamId'
+      - $ref: '#/components/parameters/batchId'
+    get:
+      summary: Show information about a Batch
+      description: |
+        Finding out more information about a specific Batch can be done by sending a GET request to this endpoint. It
+        allows you to find out a status of the Batch, and the succesfully processed and failed products.
+      tags:
+        - Batches
+      security:
+        - bearerAuth: [ ]
+      responses:
+        200:
+          $ref: '#/components/responses/BatchComplete'
+        401:
+          $ref: '#/components/responses/AuthorizationError'
+        404:
+          $ref: '#/components/responses/BatchNotFound'
+    head:
+      summary: Requests headers for batch info endpoint
+      tags:
+        - Batches
+      security:
+        - bearerAuth: [ ]
+      responses:
+        200:
+          description: ''
+        401:
+          $ref: '#/components/responses/AuthorizationError'
+        404:
+          $ref: '#/components/responses/BatchNotFound'
+
+  /:
+    get:
+      summary: Show index page
+      tags:
+        - Root endpoint
+      responses:
+        200:
+          description: Displays index page
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+    head:
+      summary: Requests headers for the index page
+      tags:
+        - Root endpoint
+      responses:
+        200:
+          description: ''
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: Personal Access Token
+
+  parameters:
+    streamId:
+      name: streamId
+      in: "path"
+      description: "Stream ID"
+      required: true
+      schema:
+        type: "integer"
+        example: 83543218
+    batchId:
+      name: batchId
+      in: "path"
+      description: "Batch ID"
+      required: true
+      schema:
+        type: "string"
+        format: uuid
+        example: "4b5dd7c1-afc6-4ad9-96a6-c5d4542d0228"
+    productId:
+      name: productId
+      in: "path"
+      description: "Product ID"
+      required: true
+      schema:
+        type: string
+        example: "ASWHJ4-127-J"
+
+  requestBodies:
+    ProductUpload:
+      description: |
+        Product data is currently accepted in two formats: `application/x-ndjson` and `application/json`. Which format
+        is allowed is dictated by a Streams type.
+
+        **Chunked Streams**
+        
+        The design of chunked type was to support clients who require high throughput for small product updates. 
+        We recommend maintaining a limit of 10K products per request. In case this roughly exceeds 1 megabyte, we'd recommend 
+        splitting the payload to fit our size requirements. The limits in bytes are most optimal for performance. 
+        Chunked enforces the use of the NDJSON format. Because of its structure, we can keep the object deserialization 
+        simple and leverage it to process more data.
+
+        **Referenced Streams**
+        
+        The referenced type is for clients who send large quantities of data. We recommend a minimum request size to be 
+        roughly 10 MB and a maximum of 200 MB. For now, this also lets clients send data in the regular JSON format, 
+        which is not possible with the chunked approach. For both NDJSON and JSON, at this moment, we don't accept nested objects.
+
+        More information:
+        * [Read more about NDJSON](http://ndjson.org/)
+
+      required: true
+      content:
+        application/x-ndjson:
+          schema:
+            oneOf:
+              - type: array
+                description: Sample data set for uploading products in NDJSON format to a chunked type stream
+                items:
+                  $ref: '#/components/schemas/Product'
+                minItems: 1
+                example: |
+                  {"id": "ASWHJ4-123-J","title": "My Product","price": "€5"}
+                  {"id": "ASWHJ4-124-J","title": "My Product","price": "€5"}
+                  {"id": "ASWHJ4-125-J","title": "My Product","price": "€5"}
+              - type: array
+                description: Sample data set for uploading products in NDJSON format to a referenced type stream
+                items:
+                  $ref: '#/components/schemas/Product'
+                minItems: 100
+                example: |
+                  {"id": "ASWHJ4-123-J","title": "My Product","price": "€5"}
+                  ....
+                  {"id": "ASWHJ4-223-J","title": "My Product","price": "€5"}
+        application/json:
+          schema:
+            type: array
+            description: Sample data set for uploading products in JSON format to a referenced type stream
+            items:
+              $ref: '#/components/schemas/Product'
+            minItems: 100
+    ProductDelete:
+      description: |
+        When creating a request body, the same set of rules can be followed as when creating a request body for a
+        product upload. The only requirement is that each product has an `id`-column, any additional attributes can be
+        omitted on your side, if not they will be ignored on our side anyway.
+      required: true
+      content:
+        application/x-ndjson:
+          schema:
+            oneOf:
+              - type: array
+                description: Sample data set for deleting products in NDJSON format to a chunked type stream
+                items:
+                  $ref: '#/components/schemas/Product'
+                minItems: 1
+                example: |
+                  {"id": "ASWHJ4-123-J"}
+                  {"id": "ASWHJ4-124-J"}
+                  {"id": "ASWHJ4-127-J"}
+              - type: array
+                description: Sample data set for deleting products in NDJSON format to a referenced type stream
+                items:
+                  $ref: '#/components/schemas/Product'
+                minItems: 100
+                example: |
+                  {"id": "ASWHJ4-234125-J"}
+                  ....
+                  {"id": "ASWHJ4-34-J"}
+        application/json:
+          schema:
+            type: array
+            description: Sample data set for deleting products in JSON format to a referenced type stream
+            items:
+              $ref: '#/components/schemas/Product'
+            minItems: 100
+
+    StreamCreation:
+      description: |
+        Request body for creating a stream.
+
+        A stream has two required properties: _name_ and _type_. The _name_ can be used as a sort of human
+        identification of the stream (next to the automatically assigned stream id). The _type_ indicates which data
+        processing mode is selected, _chunked_ or _referenced_. Once a type is chosen, it cannot be changed anymore.
+      required: true
+      content:
+        application/vnd.api+json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                type: object
+                required:
+                  - type
+                properties:
+                  type:
+                    type: string
+                    enum: [ stream ]
+                  attributes:
+                    required:
+                      - name
+                      - type
+                    properties:
+                      name:
+                        type: string
+                        minLength: 3
+                        maxLength: 255
+                        pattern: ^[\p{N}\p{L}]+([\s\-_]?[\p{N}\p{L}])*$
+                        example: My product stream
+                      type:
+                        type: string
+                        enum: [ chunked, referenced ]
+                        example: chunked
+                  relationships:
+                    type: object
+                    properties:
+                      account:
+                        type: object
+                        required:
+                          - data
+                        properties:
+                          data:
+                            type: object
+                            required:
+                              - type
+                              - id
+                            properties:
+                              type:
+                                type: string
+                                example: account
+                              id:
+                                type: integer
+                                example: 123
+
+    StreamUpdate:
+      description: |
+        Request body for updating a stream
+
+        See the request body documentation for creating information for more details.
+      required: true
+      content:
+        application/vnd.api+json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                type: object
+                required:
+                  - type
+                  - attributes
+                properties:
+                  type:
+                    type: string
+                    enum: [ stream ]
+                  id:
+                    type: integer
+                    example: 123
+                  attributes:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        minLength: 3
+                        maxLength: 255
+                        pattern: ^[\p{N}\p{L}]+([\s\-_]?[\p{N}\p{L}])*$
+                        example: Product data stream
+                      type:
+                        readOnly: true
+
+  responses:
+    BatchCreated:
+      description: Batch response with minimal Batch information
+      headers:
+        Content-Location:
+          schema:
+            type: string
+          required: false
+          description: Location where batch status can be checked
+      content:
+        application/vnd.api+json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/components/schemas/BatchObjectShort'
+    BatchComplete:
+      description: Batch response with complete Batch information
+      headers:
+        Last-Modified:
+          schema:
+            type: string
+            format: 'date-time'
+          required: false
+          example: Mon, 21 Jun 2021 10:05:06 GMT
+          description: Timestamp of last update on Batch Object
+        Retry-After:
+          schema:
+            type: integer
+          required: false
+          example: 300
+          description: How long you should wait before checking again
+      content:
+        application/vnd.api+json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/components/schemas/BatchObjectComplete'
+    BatchNotFound:
+      description: Batch ID could not be found
+      content:
+        application/vnd.api+json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/BaseError'
+              - type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      properties:
+                        status:
+                          example: 404
+                        title:
+                          example: Batch ID not found
+    BatchValidationError:
+      description: A validation error occured during Batch ID lookup
+      content:
+        application/vnd.api+json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/BaseError'
+              - type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      properties:
+                        status:
+                          example: 409
+                        title:
+                          example: Given Batch ID is not valid
+    StreamReadSingle:
+      description: Visualisation of stream object
+      content:
+        application/vnd.api+json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/components/schemas/StreamObject'
+    StreamReadList:
+      description: Visualisation of stream objects
+      content:
+        application/vnd.api+json:
+          schema:
+            type: object
+            properties:
+              meta:
+                type: object
+                required:
+                  - total
+                properties:
+                  total:
+                    type: integer
+                    description: Total number of streams in the current collection.
+              data:
+                type: array
+                minItems: 0
+                items:
+                  $ref: '#/components/schemas/StreamObject'
+              links:
+                description: Pagination links
+                type: object
+                required:
+                  - prev
+                  - next
+                properties:
+                  self:
+                    type: string
+                    nullable: true
+                  first:
+                    type: string
+                    nullable: true
+                  last:
+                    type: string
+                    nullable: true
+                  prev:
+                    type: string
+                    nullable: true
+                  next:
+                    type: string
+                    nullable: true
+    StreamCreated:
+      description: Newly created stream object
+      headers:
+        Location:
+          schema:
+            type: string
+          required: true
+          example: /streams/8743
+          description: Location of the newly created stream
+      content:
+        application/vnd.api+json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/components/schemas/StreamObject'
+    StreamNotFound:
+      description: Stream could not be found
+      content:
+        application/vnd.api+json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/BaseError'
+              - type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      properties:
+                        status:
+                          example: 404
+                        title:
+                          example: Stream ID not found
+    StreamValidationErrorWithId:
+      description: Stream IDs should not be part of the request body when creating a new stream
+      content:
+        application/vnd.api+json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/BaseError'
+              - type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      properties:
+                        status:
+                          example: 403
+                        title:
+                          example: A stream ID should not be specified when creating a stream
+    StreamValidationError:
+      description: Stream data was invalid
+      content:
+        application/vnd.api+json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/BaseError'
+              - type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      properties:
+                        status:
+                          example: 409
+                        title:
+                          example: Validation error happened with stream payload
+                        meta:
+                          oneOf:
+                            - $ref: '#/components/schemas/MetaDuplicateStreamObject'
+    AuthorizationError:
+      description: Authorization failed
+      content:
+        application/vnd.api+json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/BaseError'
+              - type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      properties:
+                        status:
+                          example: 401
+                        title:
+                          example: Access Denied
+    EmptyPayloadError:
+      description: The payload is empty
+      content:
+        application/vnd.api+json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/BatchObjectComplete'
+              - type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      properties:
+                        status:
+                          example: 400
+                        title:
+                          example: Empty payload
+
+  schemas:
+    BaseError:
+      type: object
+      required:
+        - errors
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            required:
+              - status
+              - title
+            properties:
+              id:
+                type: string
+                format: uuid
+                description: Unique reference to this error occurance
+                example: e1a6f644-3d72-44e9-83e0-f64a640cb04c
+              status:
+                type: integer
+                example: 404
+                description: HTTP Status code
+              code:
+                type: integer
+                description: Internal error code
+                example: 13556
+              title:
+                type: string
+                example: "Internal Server Error"
+                description: General error description
+              detail:
+                type: string
+                example: ""
+                description: Detailed error description
+              meta:
+                type: object
+                description: Meta information about the error
+
+    # Objects
+
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "ASWHJ4-123-J"
+      required:
+        - id
+      additionalProperties:
+        type: string
+
+    StreamObject:
+      type: object
+      required:
+        - id
+        - type
+        - attributes
+      properties:
+        type:
+          type: string
+          example: stream
+        id:
+          type: integer
+          example: 549812
+        attributes:
+          type: object
+          properties:
+            name:
+              type: string
+              example: Product data stream
+            type:
+              type: string
+              enum: [ chunked, referenced ]
+              example: chunked
+            createdAt:
+              type: string
+              example: 2021-12-21T21:12:21+00:00
+            updatedAt:
+              type: string
+              example: 2021-12-21T21:12:21+00:00
+        relationships:
+          type: object
+          properties:
+            account:
+              type: object
+              properties:
+                data:
+                  $ref: '#/components/schemas/AccountObject'
+
+    AccountObject:
+      type: object
+      required:
+        - id
+        - type
+      properties:
+        type:
+          type: string
+          enum: [ account ]
+          example: account
+        id:
+          type: integer
+          example: 1
+
+    StageStatusObject:
+      type: object
+      required:
+        - completedAt
+        - status
+        - successCount
+        - errorCount
+        - errors
+      properties:
+        completedAt:
+          type: string
+          example: 2021-12-21T21:12:21+00:00
+        status:
+          type: string
+          example: success
+          enum: [ success, warning, failure ]
+        successCount:
+          type: integer
+          nullable: false
+          description: Number of successfull products
+          example: 1329
+        errorCount:
+          type: integer
+          nullable: false
+          description: Total number of errors
+          example: 10
+        errors:
+          type: array
+          description: Distinct error samples grouped by the error message
+          items:
+            properties:
+              message:
+                type: string
+                description: The error message
+                example: Syntax error
+              occurrences:
+                type: integer
+                description: Number of the error occurences
+                example: 1
+              example:
+                type: object
+                description: Example occurrence of the error
+                properties:
+                  lineNumber:
+                    type: integer
+                    example: 0
+                  value:
+                    type: string
+                    example: "{\"id\":\"123\"\"name\":\"Product\"}"
+
+    BatchObjectShort:
+      type: object
+      required:
+        - type
+        - id
+      properties:
+        type:
+          type: string
+          readOnly: true
+          example: batch
+        id:
+          type: string
+          readOnly: true
+          format: uuid
+          example: "4b5dd7c1-afc6-4ad9-96a6-c5d4542d0228"
+        attributes:
+          type: object
+          required:
+            - status
+            - errorCount
+            - stages
+          properties:
+            status:
+              type: string
+              enum: [ uploaded, processed, failed ]
+              description: Indicates the overall status of the batch as it goes through various stages
+            errorCount:
+              type: integer
+              description: Total error count from all stages
+            stages:
+              type: object
+              required:
+                - upload
+                - processing
+              properties:
+                upload:
+                  $ref: '#/components/schemas/StageStatusObject'
+                processing:
+                  $ref: '#/components/schemas/StageStatusObject'
+
+    BatchObjectComplete:
+      type: object
+      required:
+        - type
+        - id
+        - attributes
+        - relationships
+      properties:
+        type:
+          type: string
+          example: batch
+        id:
+          type: string
+          format: uuid
+          example: "4b5dd7c1-afc6-4ad9-96a6-c5d4542d0228"
+        attributes:
+          type: object
+          required:
+            - status
+            - errorCount
+            - stages
+          properties:
+            status:
+              type: string
+              enum: [ uploaded, processed, failed ]
+              description: "Indicates the overall status of the batch as it goes through various stages."
+            errorCount:
+              type: integer
+              description: "Total error count from all stages."
+            stages:
+              type: object
+              required:
+                - upload
+                - processing
+              properties:
+                upload:
+                  $ref: '#/components/schemas/StageStatusObject'
+                processing:
+                  $ref: '#/components/schemas/StageStatusObject'
+        relationships:
+          type: object
+          properties:
+            stream:
+              type: object
+              properties:
+                data:
+                  type: object
+                  required:
+                    - type
+                    - id
+                  properties:
+                    type:
+                      type: string
+                      example: stream
+                    id:
+                      type: string
+                      example: 56284957
+    MetaDuplicateStreamObject:
+      type: object
+      required:
+        - duplicate
+      properties:
+        duplicate:
+          type: object
+          required:
+            - type
+            - id
+            - links
+          properties:
+            type:
+              type: string
+              description: Type of the duplicated resource.
+              example: stream
+            id:
+              type: string
+              description: Unique reference to the original resource.
+              example: 123
+            links:
+              type: object
+              description: Contains useful links like a link to the original resource.
+              example: { "self": "/streams/123" }

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<items xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="items.xsd">
+
+    <itemtypes>
+
+        <itemtype 
+            generate="true" 
+            code="URLResolutionProperties" 
+            jaloclass="io.productsup.productdataexport.accelerator.jalo.URLResolutionProperties"
+            autocreate="true">
+            <description>Properties to be used when resolving a direct URL.</description>
+            <deployment table="URLResolutionProp" typecode="19123" />
+            <attributes>
+                <attribute type="java.lang.String" qualifier="code">
+                    <description>Unique code for this item.</description>
+                    <persistence type="property" />
+                    <modifiers optional="false" initial="true" unique="true" />
+                </attribute>
+                <attribute type="BaseSite" qualifier="baseSite">
+                    <persistence type="property" />
+                    <modifiers optional="false" initial="true" />
+                    <description>The BaseSite to be used for URL resolving.</description>
+                </attribute>
+                <attribute type="java.lang.String" qualifier="encodingAttributes">
+                    <description>Encoding attributes within the URL after the URL base.</description>
+                    <persistence type="property" />
+                </attribute>
+                <attribute type="java.lang.String" qualifier="subPath">
+                    <description>The path to include in the URL.</description>
+                    <persistence type="property" />
+                </attribute>
+                <attribute type="java.lang.Boolean" qualifier="secure">
+                    <description>Boolean indicating whether to use secure protocol (i.e., https).</description>
+                    <persistence type="property" />
+                    <defaultvalue>Boolean.FALSE</defaultvalue>
+                </attribute>
+                <attribute type="java.lang.String" qualifier="queryParameters">
+                    <description>Parameters of the URL needed to point to the desired destination.</description>
+                    <persistence type="property" />
+                </attribute>
+            </attributes>
+        </itemtype>
+
+        <itemtype 
+            code="ExportCronJob"
+            autocreate="false"
+            generate="true">
+            <attributes>
+                <attribute type="URLResolutionProperties" qualifier="urlResolutionProperties">
+                    <persistence type="property"/>
+                    <description>ExportConfig holding export configuration.</description>
+                </attribute>
+            </attributes>
+        </itemtype>
+
+    </itemtypes>
+</items>

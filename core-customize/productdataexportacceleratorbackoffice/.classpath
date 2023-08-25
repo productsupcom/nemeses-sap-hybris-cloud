@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="gensrc"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/productdataexport"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/productdataexportaccelerator"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/platform"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/backoffice"/>
+	<classpathentry kind="lib" path="resources"/>
+	<classpathentry kind="output" path="classes"/>
+</classpath>

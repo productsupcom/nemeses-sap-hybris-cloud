@@ -1,0 +1,17 @@
+<action-definition 
+    id="io.productsup.productdataexport.backoffice.action.export" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://www.hybris.com/schema/cockpitng/action-definition.xsd">
+
+    <name>ProductsupExportAction</name>
+    <description>Custom action to export a catalog version to productsup.</description>
+    <author>productsup</author>
+    <version>1.0</version>
+    
+    <actionClassName>io.productsup.productdataexport.backoffice.action.ProductsupExportAction</actionClassName>
+    
+    <iconUri>icons/icon_productsup_export_default.png</iconUri>
+    <iconDisabledUri>icons/icon_productsup_export_disabled.png</iconDisabledUri>
+    <iconHoverUri>icons/icon_productsup_export_hover.png</iconHoverUri>
+
+</action-definition>

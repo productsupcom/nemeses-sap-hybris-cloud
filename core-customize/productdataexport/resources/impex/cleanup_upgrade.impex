@@ -1,0 +1,14 @@
+#select * from {ExportCronjob}
+
+REMOVE CSVExportCronJob[batchMode=true];itemType(code)[unique=true];
+#;CSVExportCronJob;
+
+REMOVE CSVExportConnection[batchMode=true];itemType(code)[unique=true];
+#;FTPExportConnection;
+#;FTPSExportConnection;
+#;SFTPExportConnection;
+
+#delete data\backoffice\widgetlib
+#ant update system
+
+# => /maintain/cleanup => clear all orphaned types

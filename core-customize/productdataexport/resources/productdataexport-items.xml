@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<items xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="items.xsd">
+
+    <atomictypes>
+        <atomictype 
+            class="io.productsup.productdataexport.dataaccess.IndexedAttributeDescriptor" 
+            extends="java.lang.Object" autocreate="true" generate="false" />
+    </atomictypes>
+
+    <collectiontypes>
+        <collectiontype 
+            elementtype="io.productsup.productdataexport.dataaccess.IndexedAttributeDescriptor"
+            code="IndexedAttributeDescriptorList" 
+            autocreate="true"
+            generate="true"
+            type="list" />
+    </collectiontypes>
+
+    <enumtypes>
+        <enumtype code="CSVExportType" autocreate="true" generate="true" >
+            <value code="FULL" />
+            <value code="INCREMENTAL" />
+            <value code="DELTA" />
+        </enumtype>
+
+        <enumtype code="CSVExportProtocol" autocreate="true" generate="true" >
+            <value code="HTTPS" />
+        </enumtype>
+    </enumtypes>
+
+    <maptypes>
+         <maptype code="ExportCronjobHashMapType" argumenttype="java.lang.String"
+             returntype="java.lang.String" generate="true" autocreate="true" />
+    </maptypes>
+
+    <relations>
+
+        <relation localized="false" code="CSVExportFieldConfigRelation">
+            <deployment table="CSVExportFieldConfigR" typecode="19115"/>
+            <sourceElement 
+                type="CSVExportConfig" 
+                qualifier="exportConfigs" 
+                cardinality="many"
+                collectiontype="set">
+                <description>The source CSVExportConfig which holds the field related export configuration.</description>
+            </sourceElement>
+            <targetElement 
+                type="CSVFieldConfig" 
+                qualifier="fieldConfigs" 
+                cardinality="many" 
+                collectiontype="set">
+                <description>The field configurations held by the CSVExportConfig.</description>
+            </targetElement>
+        </relation>
+
+    </relations>
+
+	<itemtypes>
+
+        <!-- Export configuration -->
+        <itemtype
+            generate="true" 
+            code="CSVExportConfig"
+            jaloclass="io.productsup.productdataexport.jalo.CSVExportConfig"
+            autocreate="true">
+            <description>Export configuration</description>
+            <deployment table="CSVExportConfig" typecode="19111"/>
+            <attributes>
+                <attribute qualifier="code" type="java.lang.String">
+                    <persistence type="property" />
+                    <modifiers optional="false" unique="true" initial="true" />
+                </attribute>
+                <attribute type="java.lang.Integer" qualifier="weightDistanceType">
+                    <description>A weight for the distance between a type and a product.</description>
+                    <persistence type="property" />
+                    <defaultvalue>Integer.valueOf(1)</defaultvalue>
+                </attribute>
+                <attribute type="java.lang.Integer" qualifier="weightDistanceCategory">
+                    <description>A weight for the distance between a category and the product's categories.</description>
+                    <persistence type="property" />
+                    <defaultvalue>Integer.valueOf(1)</defaultvalue>
+                </attribute>
+            </attributes>
+        </itemtype>
+
+        <!-- Field configuration -->
+        <itemtype
+            generate="true" 
+            code="CSVFieldConfig"
+            jaloclass="io.productsup.productdataexport.jalo.CSVFieldConfig"
+            autocreate="true"
+            abstract="true">
+            <description>Basic class for exported field configuration</description>
+            <deployment table="CSVFieldConfig" typecode="19112"/>
+            <attributes>
+                <attribute type="java.lang.String" qualifier="code">
+                    <description>Unique code for this CSVFieldConfig.</description>
+                    <persistence type="property" />
+                    <modifiers optional="false" unique="true" initial="true" />
+                </attribute>
+                <attribute type="ComposedType" qualifier="productType">
+                    <description>Represents a ComposedType used to identify the product type to export.</description>
+                    <persistence type="property" />
+                </attribute>
+                <attribute type="Category" qualifier="productCategory">
+                    <description>Represents a category used to identify products to be exported based on their assigned
+                     category.</description>
+                    <persistence type="property" />
+                </attribute>
+                <attribute type="java.lang.String" qualifier="fieldFormatterBean">
+                    <description>References a Spring formatter bean which manages the correct formatting for the given 
+                    product attribute.</description>
+                    <persistence type="property" />
+                    <modifiers optional="false" />
+                    <defaultvalue>"defaultFieldFormatter"</defaultvalue>
+                </attribute>
+                <attribute type="java.lang.String" qualifier="fieldExtractorBean">
+                    <description>References a Spring extractor bean which manages the correct extraction for the given 
+                    product attribute.</description>
+                    <persistence type="property" />
+                    <modifiers optional="false" initial="true"/>
+                </attribute>
+                <attribute type="java.lang.String" qualifier="fieldHeader">
+                    <description>Header used for the field within the CSV file.</description>
+                    <persistence type="property" />
+                    <modifiers optional="false" initial="true" />
+                </attribute>
+                <attribute type="boolean" qualifier="includedInHash">
+                    <persistence type="property" />
+                    <modifiers optional="false" />
+                    <description>Flag to control hash building for delta check.</description>
+                    <defaultvalue>false</defaultvalue>
+                </attribute>
+            </attributes>
+        </itemtype>
+
+        <itemtype 
+            generate="true"
+            code="AttributeFieldConfig"
+            jaloclass="io.productsup.productdataexport.jalo.AttributeFieldConfig"
+            autocreate="true"
+            extends="CSVFieldConfig">
+            <description>Describes a product's attribute's value to export.</description>
+            <attributes>
+                <attribute type="java.lang.String" qualifier="fieldExtractorBean" redeclare="true">
+                    <persistence type="property" />
+                    <modifiers optional="false" write="false" initial="true" />
+                    <defaultvalue>"attributeFieldExtractorStrategy"</defaultvalue>
+                </attribute>
+                <attribute 
+                    autocreate="true" 
+                    qualifier="indexedAttributeDescriptorsInternal" 
+                    type="java.lang.String">
+                    <custom-properties>
+                        <property name="hiddenForUI">
+                            <value>Boolean.TRUE</value>
+                        </property>
+                    </custom-properties>
+                    <modifiers read="true" write="true" search="false" optional="false" initial="true"/>
+                    <persistence type="property">
+                        <columntype database="oracle">
+                            <value>CLOB</value>
+                        </columntype>
+                        <columntype database="sap">
+                            <value>NCLOB</value>
+                        </columntype>
+                        <columntype database="mysql">
+                            <value>TEXT</value>
+                        </columntype>
+                        <columntype>
+                            <value>HYBRIS.LONG_STRING</value>
+                        </columntype>
+                    </persistence>
+                </attribute>
+                <attribute 
+                    autocreate="true" 
+                    qualifier="indexedAttributeDescriptors" 
+                    type="IndexedAttributeDescriptorList" >
+                    <persistence type="dynamic" attributeHandler="indexedAttributeDescriptorsAttributeHandler" />
+                    <modifiers read="true" write="true" search="false" optional="true"/>
+                </attribute>
+            </attributes>
+        </itemtype>
+
+        <itemtype 
+            generate="true"
+            code="ClassificationAttributeConfig"
+            jaloclass="io.productsup.productdataexport.jalo.ClassificationAttributeConfig"
+            autocreate="true"
+            extends="CSVFieldConfig">
+            <description>Classification attribute export configuration.</description>
+            <attributes>
+                <attribute type="java.lang.String" qualifier="fieldExtractorBean" redeclare="true">
+                    <persistence type="property" />
+                    <modifiers optional="false" write="false" initial="true" />
+                    <defaultvalue>"classificationFieldExtractorStrategy"</defaultvalue>
+                </attribute>
+                <attribute type="ClassificationAttribute" qualifier="fieldDescriptor">
+                    <persistence type="property" />
+                    <modifiers optional="false" initial="true"/>
+                </attribute>
+            </attributes>
+        </itemtype>
+
+        <itemtype 
+            generate="true"
+            code="SelfReferenceFieldConfig"
+            jaloclass="io.productsup.productdataexport.jalo.SelfReferenceFieldConfig"
+            autocreate="true"
+            extends="CSVFieldConfig">
+            <description>Simply references the source item (i.e., the product); needed for specific extraction and formatting.</description>
+            <attributes>
+                <attribute type="java.lang.String" qualifier="fieldExtractorBean" redeclare="true">
+                    <persistence type="property" />
+                    <modifiers optional="false" write="false" initial="true" />
+                    <defaultvalue>"selfReferenceExtractorStrategy"</defaultvalue>
+                </attribute>
+            </attributes>
+        </itemtype>
+
+        <!-- CronJob related -->
+        <itemtype 
+            generate="true"
+            code="ExportCronJob"
+            jaloclass="io.productsup.productdataexport.jalo.ExportCronJob"
+            extends="CronJob"
+            abstract="true"
+            autocreate="true">
+            <description>Exporting cronJob.</description>
+            <attributes>
+                <attribute type="CSVExportConfig" qualifier="exportConfig">
+                    <persistence type="property"/>
+                    <modifiers optional="false" />
+                    <description>CSVExportConfig holding export configuration.</description>
+                </attribute>
+                <attribute type="CatalogVersion" qualifier="catalogVersion">
+                    <persistence type="property" />
+                    <modifiers optional="false" />
+                    <description>References a CatalogVersion which contained products' data is to be exported.</description>
+                </attribute>
+                <attribute type="java.util.Date" qualifier="lastSuccessfulCSVExport">
+                    <persistence type="property" />
+                    <description>Date when the last CSV export was successful.</description>
+                </attribute>
+                <attribute type="CSVExportType" qualifier="exportType">
+                    <persistence type="property" />
+                    <description>The type of export (i.e., full or incremental).</description>
+                    <modifiers optional="false" write="false" initial="true" />
+                    <defaultvalue>em().getEnumerationValue("CSVExportType", "FULL")</defaultvalue>
+                </attribute>
+                <attribute type="CSVExportConnection" qualifier="exportConnection">
+                    <persistence type="property" />
+                    <modifiers optional="false" />
+                    <description>Item holding the information to which server to connect, which protocol to use and the required credentials to log in</description>
+                </attribute>
+                <attribute type="java.lang.String" qualifier="progress">
+                    <modifiers read="true" write="false" initial="false" optional="true"/>
+                    <persistence type="dynamic" attributeHandler="cronjobProgressAttributeHandler"/>
+                </attribute>
+            </attributes>
+        </itemtype>
+
+        <itemtype 
+            generate="true"
+            code="ProductsUpApiExportCronJob"
+            jaloclass="io.productsup.productdataexport.jalo.ProductsUpApiExportCronJob"
+            extends="ExportCronJob"
+            autocreate="true">
+            <description>API Exporting cronJob.</description>
+            <attributes>
+                <attribute type="java.lang.String" qualifier="streamId">
+                    <persistence type="property" />
+                    <modifiers optional="false" />
+                    <description>Id of the products UP Stream where the data have to export to.</description>
+                </attribute>
+                <attribute type="java.lang.Integer" qualifier="chunkSize">
+                    <persistence type="property" />
+                    <modifiers optional="false" />
+                    <description>The size of the export chunk, packages of the given number of records.</description>
+                    <defaultvalue>java.lang.Integer.valueOf(10000)</defaultvalue>
+                </attribute>
+            </attributes>
+        </itemtype>
+
+        <!-- Export Connection related -->
+        <itemtype 
+            generate="true"
+            code="CSVExportConnection"
+            jaloclass="io.productsup.productdataexport.jalo.CSVExportConnection"
+            autocreate="true"
+            abstract="true">
+            <description>Network connection, used for export.</description>
+            <deployment table="CSVExportConnection" typecode="19114"/>
+            <attributes>
+                <attribute type="java.lang.String" qualifier="code">
+                    <persistence type="property" />
+                    <modifiers optional="false" unique="true" />
+                    <description>Unique code of this export target.</description>
+                </attribute>
+                <!-- The following 6 attributes are kept in this class so that Backoffice 
+                can be configured to show them for Subtypes as well. Ignore them if you 
+                create a Subclass of this and do not need these attributes. -->
+                <attribute type="CSVExportProtocol" qualifier="protocol">
+                    <persistence type="property" />
+                    <modifiers optional="false" />
+                </attribute>
+                <attribute type="java.lang.String" qualifier="hostName">
+                    <persistence type="property" />
+                    <modifiers optional="true" />
+                </attribute>
+                <attribute type="java.lang.String" qualifier="userName">
+                    <persistence type="property" />
+                    <modifiers optional="true" />
+                </attribute>
+                <attribute type="java.lang.String" qualifier="password">
+                    <persistence type="property" />
+                    <modifiers optional="true" />
+                </attribute>
+                <attribute type="java.lang.String" qualifier="accessToken">
+                    <persistence type="property" />
+                    <modifiers optional="true" />
+                </attribute>
+                <attribute type="java.lang.Integer" qualifier="port">
+                    <persistence type="property" />
+                </attribute>
+            </attributes>
+        </itemtype>
+
+        <itemtype 
+            generate="true"
+            code="AccessTokenRestApiExportConnection"
+            jaloclass="io.productsup.productdataexport.jalo.AccessTokenRestApiExportConnection"
+            autocreate="true"
+            extends="CSVExportConnection">
+            <description>Rest API connection.</description>
+            <attributes>
+                <attribute type="CSVExportProtocol" qualifier="protocol" redeclare="true">
+                    <persistence type="property" />
+                    <modifiers optional="false" initial="true" write="false" />
+                    <defaultvalue><![CDATA[em().getEnumerationValue("CSVExportProtocol", "HTTPS")]]></defaultvalue>
+                </attribute>
+                <attribute type="java.lang.String" qualifier="accessToken" redeclare="true">
+                    <persistence type="property" />
+                    <modifiers optional="false" />
+                </attribute>
+            </attributes>
+        </itemtype>
+
+        <itemtype code="Product" autocreate="false" generate="false">
+            <attributes>
+                <attribute qualifier="exportHash" type="ExportCronjobHashMapType">
+                    <description>
+                        Map of cronJob Pk's and its last export result hash
+                    </description>
+                    <modifiers read="true" write="true" />
+                    <persistence type="property"/>
+                </attribute>
+            </attributes>
+        </itemtype>
+
+    </itemtypes>
+</items>

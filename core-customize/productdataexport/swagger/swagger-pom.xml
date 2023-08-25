@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>io.productsup.productdataexport</groupId>
+  <artifactId>productsdataexport-swagger-documentation</artifactId>
+  <version>1.0.0</version>
+
+  <properties>
+    <!-- dependency versions -->
+    <swaggercodegen.plugin.version>3.0.13</swaggercodegen.plugin.version><!-- check with version 3.0.44 - generation fails -->
+  </properties>
+
+  <build>
+      <plugins>
+          <plugin>
+              <groupId>io.swagger.codegen.v3</groupId>
+              <artifactId>swagger-codegen-maven-plugin</artifactId>
+              <version>${swaggercodegen.plugin.version}</version>
+              <configuration>
+                  <inputSpec>${swaggercodegen.inputSpec}</inputSpec>
+                  <language>${swaggercodegen.language}</language>
+                  <output>${swaggercodegen.outputDir}</output>
+                  <packageName>${swaggercodegen.package}</packageName>
+                  <modelPackage>${swaggercodegen.package}.model</modelPackage>
+                  <apiPackage>${swaggercodegen.package}.handler</apiPackage>
+                  <invokerPackage>${swaggercodegen.package}.invoker</invokerPackage>
+                  <generateModelDocumentation>false</generateModelDocumentation>
+                  <generateApiDocumentation>false</generateApiDocumentation>
+                  <generateModelTests>false</generateModelTests>
+                  <generateApiTests >false</generateApiTests >
+                  <generateSupportingFiles>true</generateSupportingFiles>
+                  <configOptions>
+                    <dateLibrary>java8</dateLibrary>
+                  </configOptions>
+              </configuration>
+              <executions>
+                  <execution>
+                      <goals>
+                          <goal>generate</goal>
+                      </goals>
+                  </execution>
+              </executions>
+          </plugin>
+      </plugins>
+  </build>
+</project>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget-definition 
+    id="io.productsup.productdataexport.backoffice.pupadvancedsearch"
+    extends="com.hybris.cockpitng.advancedsearch"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://www.hybris.com/schema/cockpitng/widget-definition.xsd">
+    
+    <name>Productsup Advanced Search</name>
+    <description>Productsup Advanced search widget</description>
+
+    <controller class="io.productsup.productdataexport.backoffice.pupadvancedsearch.PupAdvancedSearchController"/>
+
+    <sockets>
+        <input id="type" type="java.lang.String"/>
+        <input id="initContext" type="com.hybris.backoffice.widgets.advancedsearch.impl.AdvancedSearchInitContext"/>
+        <input id="sortData" type="com.hybris.cockpitng.search.data.SortData"/>
+        <input id="refreshResults" type="java.lang.Object"/>
+        <input id="fullTextSearchData" type="com.hybris.cockpitng.search.data.FullTextSearchData"/>
+        <input id="autosuggestions" type="java.util.Map"/>
+        <output id="autosuggestionQuery" type="com.hybris.cockpitng.search.data.AutosuggestionQueryData"/>
+        <output id="searchData" type="com.hybris.backoffice.widgets.advancedsearch.impl.AdvancedSearchData"/>
+        <output id="reset" type="java.util.Map"/>
+    </sockets>
+    
+</widget-definition>

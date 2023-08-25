@@ -1,0 +1,20 @@
+<action-definition 
+    id="io.productsup.productdataexport.backoffice.action.easyfieldconfigwizard" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://www.hybris.com/schema/cockpitng/action-definition.xsd">
+
+    <name>EasyFieldConfigWizardAction</name>
+    <description>Custom action to easily create all available CSV field configurations.</description>
+
+    <actionClassName>io.productsup.productdataexport.backoffice.action.EasyFieldConfigWizardAction</actionClassName>
+
+    <inputType>java.lang.Void</inputType>
+    <outputType>java.util.Void</outputType>
+
+    <!-- folder icons with the icons must be created in the following directory: 
+        myextension/backoffice/resources/widgets/actions/easyfieldconfigwizard -->
+    <iconUri>icons/easyfieldconfigwizard_icon.png</iconUri>
+    <iconHoverUri>icons/easyfieldconfigwizard_icon_hover.png</iconHoverUri>
+    <iconDisabledUri>icons/easyfieldconfigwizard_icon_disabled.png</iconDisabledUri>
+
+</action-definition>

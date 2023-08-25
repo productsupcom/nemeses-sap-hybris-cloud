@@ -1,0 +1,11 @@
+$groupProductsup=productsup
+
+$START_USERRIGHTS;;;;;;;;;
+
+Type;UID;MemberOfGroups;Password;Target;read;change;create;remove;change_perm
+UserGroup;$groupProductsup;employeegroup;;;;;;
+;;;;CSVExportCronJob;+;+;+;+;-
+;;;;URLResolutionProperties;+;+;+;+;-
+;;;;BaseSite;+;-;-;-;-
+
+$END_USERRIGHTS;;;;;;;;;

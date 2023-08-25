@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<widget-definition id="io.productsup.productdataexport.backoffice.pupreferenceadvancedsearchgroup" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://www.hybris.com/schema/cockpitng/widget-definition.xsd">
+
+    <name>Productsup Reference Search Group Widget</name>
+    <description>Productsup Reference Search Group Widget</description>
+
+    <sockets>
+        <input id="pupReferenceSearchCtx" type="com.hybris.cockpitng.data.TypeAwareSelectionContext"/>
+        <input id="cancelOutputForward" type="java.lang.Object" visibility="invisible"/>
+        <input id="selectedReferencesOutputForward" type="java.lang.Object" multiplicity="List" visibility="invisible"/>
+
+        <output id="selectedReferencesOutput" type="java.lang.Object" multiplicity="List"/>
+        <output id="cancelOutput" type="java.lang.Object"/>
+        
+        <forward input="selectedReferencesOutputForward" output="selectedReferencesOutput"/>
+        <forward input="cancelOutputForward" output="cancelOutput"/>
+    </sockets>
+    
+</widget-definition>

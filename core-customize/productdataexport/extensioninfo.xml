@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<extensioninfo 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:noNamespaceSchemaLocation="extensioninfo.xsd">
+
+   <extension 
+        abstractclassprefix="Generated" 
+        classprefix="Productdataexport" 
+        managername="ProductdataexportManager" 
+        managersuperclass="de.hybris.platform.jalo.extension.Extension" 
+        name="productdataexport" 
+        usemaven="true">
+
+        <requires-extension name="basecommerce" />
+
+        <coremodule 
+            generated="true" 
+            manager="io.productsup.productdataexport.jalo.ProductdataexportManager" 
+            packageroot="io.productsup.productdataexport"/>
+    </extension>
+</extensioninfo>

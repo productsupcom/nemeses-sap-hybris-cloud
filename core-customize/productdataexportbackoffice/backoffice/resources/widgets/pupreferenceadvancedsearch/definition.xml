@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<widget-definition id="io.productsup.productdataexport.backoffice.pupreferenceadvancedsearch" 
+    extends="com.hybris.cockpitng.backoffice.referenceadvancedsearch"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://www.hybris.com/schema/cockpitng/widget-definition.xsd">
+
+
+    <name>Productsup Reference Search Widget</name>
+    <description>Productsup Reference Search Widget</description>
+    <controller class="io.productsup.productdataexport.backoffice.pupreferenceadvancedsearch.PupReferenceASController"/>
+
+    <sockets>
+        <input id="pupReferenceSearchCtx" type="com.hybris.cockpitng.data.TypeAwareSelectionContext"/>
+        <input id="resetSelection" type="java.lang.Object"/>
+        <input id="selectedItems" type="[T]" multiplicity="List"/>
+        <input id="selectedItem" type="java.lang.Object"/>
+
+        <output id="pupAdvancedSearchInitCtx" type="com.hybris.backoffice.widgets.advancedsearch.impl.AdvancedSearchInitContext"/>
+        <output id="selectedReferences" type="java.lang.Object" multiplicity="List"/>
+        <output id="cancel" type="com.hybris.cockpitng.data.TypeAwareSelectionContext"/>
+    </sockets>
+
+</widget-definition>

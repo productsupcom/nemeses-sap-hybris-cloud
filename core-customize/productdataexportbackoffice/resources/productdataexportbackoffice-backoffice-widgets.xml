@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://www.hybris.com/schema/cockpitng/widgets.xsd">
+    
+    <widget-connection 
+        sourceWidgetId="pcmbackoffice-collectionBrowser-catalogSelector"
+        outputId="syncCatalogVersion"
+        targetWidgetId="STUB_io.productsup.productdataexport.backoffice.action.export"
+        inputId="catalogVersion"/>
+        
+    <widget-connection 
+        sourceWidgetId="pcmbackoffice-collectionBrowser-catalogFilterTree"
+        outputId="nodeSelected"
+        targetWidgetId="STUB_io.productsup.productdataexport.backoffice.action.export"
+        inputId="nodeSelected"/>
+
+    <widget-extension widgetId="mainSlot">
+        <widget id="pupreferenceadvancedsearchgroup" widgetDefinitionId="io.productsup.productdataexport.backoffice.pupreferenceadvancedsearchgroup" slotId="cockpitWidgetChildrenInvisible" title="referenceadvancedsearchgroup.widget.title" template="true">
+            <instance-settings socketEventRoutingMode="LAST_USED">
+                <create onInit="false" reuseExisting="false">
+                    <incoming-events>
+                        <socket-event id="pupReferenceSearchCtx"/>
+                    </incoming-events>
+                </create>
+                <close>
+                    <outgoing-events>
+                        <socket-event id="selectedReferencesOutput"/>
+                        <socket-event id="cancelOutput"/>
+                    </outgoing-events>
+                </close>
+                <select onInit="false"/>
+            </instance-settings>
+            <setting key="/referenceCollectionBrowser/collectionBrowserConfigCtx" type="String">reference-collection-browser</setting>
+            <setting key="/referenceAdvancedSearch/displayInNonCollapsibleContainer" type="Boolean">true</setting>
+            <setting key="/referenceAdvancedSearch/disableSimpleSearch" type="Boolean">true</setting>
+            <setting key="/referenceAdvancedSearchEngine/defaultPageSize" type="Integer">50</setting>
+            <setting key="widgetStyleClass" type="String">yw-com_hybris_cockpitng_backoffice_referenceadvancedsearchgroup</setting>
+            <setting key="widgetStyleAttribute" type="String"></setting>
+            <setting key="_width" type="String">70%</setting>
+            <setting key="_height" type="String">75%</setting>
+            <virtual-sockets/>
+        </widget>
+    </widget-extension>
+
+    <widget-connection
+        sourceWidgetId="STUB_io.productsup.productdataexport.backoffice.editor.attributedescriptorpathrenderer"
+        outputId="pupReferenceSearchCtx"
+        targetWidgetId="pupreferenceadvancedsearchgroup"
+        inputId="pupReferenceSearchCtx" />
+
+
+    <widget-connection 
+        sourceWidgetId="pupreferenceadvancedsearchgroup" 
+        outputId="selectedReferencesOutput" 
+        targetWidgetId="STUB_io.productsup.productdataexport.backoffice.editor.attributedescriptorpathrenderer" 
+        inputId="referenceEditorInput"/>
+
+</widgets>

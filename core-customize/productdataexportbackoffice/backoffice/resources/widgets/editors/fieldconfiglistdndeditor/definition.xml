@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<editor-definition id="io.productsup.productdataexport.backoffice.editor.fieldconfiglistdndeditor"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://www.hybris.com/schema/cockpitng/editor-definition.xsd">
+
+    <name>Field Config List Drag and Drop Editor</name>
+    <description>Editor with specific Drag and Drop Behaviour for CSV Field Configs</description>
+    <version>0.1</version>
+
+    <type>^MultiReference-(COLLECTION|LIST|SET)\((.*)\)$</type>
+    
+    <editorClassName>io.productsup.productdataexport.backoffice.editor.fieldconfiglistdndeditor.FieldConfigListDndEditor</editorClassName>
+
+    <sockets>
+        <input id="referenceEditorInput"/>
+        <output id="referenceEditorOutput" type="java.util.Map"/>
+        <output id="referenceSelected" type="com.hybris.cockpitng.data.TypeAwareSelectionContext"/>
+        <output id="referenceSearchCtx" type="com.hybris.cockpitng.data.TypeAwareSelectionContext"/>
+    </sockets>
+
+    <settings>
+        <setting key="pageSize" default-value="5" type="java.lang.Integer"/>
+        <setting key="referenceAdvancedSearchEnabled" default-value="true" type="Boolean"/>
+    </settings>
+</editor-definition>

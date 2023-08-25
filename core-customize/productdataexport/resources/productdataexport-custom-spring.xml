@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop" xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/util
+           http://www.springframework.org/schema/util/spring-util.xsd
+           http://www.springframework.org/schema/aop
+           http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <bean id="productUrlValueProvider" parent="abstractPropertyFieldValueProvider"
+        class="de.hybris.platform.commerceservices.search.solrfacetsearch.provider.impl.ProductUrlValueProvider">
+        <property name="commonI18NService" ref="commonI18NService" />
+        <property name="fieldNameProvider" ref="solrFieldNameProvider" />
+        <property name="urlResolver" ref="defaultProductModelUrlResolver" />
+    </bean>
+
+    <bean id="promotionCodeValueProvider" parent="abstractPropertyFieldValueProvider"
+        class="de.hybris.platform.commerceservices.search.solrfacetsearch.provider.impl.PromotionCodeValueProvider">
+        <property name="promotionsService" ref="promotionsService" />
+        <property name="fieldNameProvider" ref="solrFieldNameProvider" />
+    </bean>
+
+    <alias name="primaryPromotionImageValueProvider" alias="image30ValueProvider" />
+    <alias name="primaryPromotionImageValueProvider" alias="image65ValueProvider" />
+    <alias name="primaryPromotionImageValueProvider" alias="image96ValueProvider" />
+    <alias name="primaryPromotionImageValueProvider" alias="image300ValueProvider" />
+    <alias name="primaryPromotionImageValueProvider" alias="image515ValueProvider" />
+    <alias name="primaryPromotionImageValueProvider" alias="promotionImageValueProvider" />
+    <bean id="primaryPromotionImageValueProvider" parent="abstractPropertyFieldValueProvider"
+        class="de.hybris.platform.commerceservices.search.solrfacetsearch.provider.impl.PrimaryPromotionImageValueProvider">
+        <property name="promotionsService" ref="promotionsService" />
+        <property name="fieldNameProvider" ref="solrFieldNameProvider" />
+    </bean>
+
+    <alias name="categoryCodeValueProvider" alias="electronicsCategoryCodeValueProvider" />
+    <alias name="categoryCodeValueProvider" alias="electronicsBrandCategoryCodeValueProvider" />
+    <bean id="categoryCodeValueProvider" parent="abstractPropertyFieldValueProvider"
+        class="de.hybris.platform.commerceservices.search.solrfacetsearch.provider.impl.CategoryCodeValueProvider">
+        <property name="categoryService" ref="categoryService" />
+        <property name="fieldNameProvider" ref="solrFieldNameProvider" />
+        <property name="commonI18NService" ref="commonI18NService" />
+    </bean>
+    <alias name="categoryNameValueProvider" alias="electronicsCategoryNameValueProvider" />
+    <alias name="categoryNameValueProvider" alias="electronicsBrandCategoryNameValueProvider" />
+    <bean id="categoryNameValueProvider"
+        class="de.hybris.platform.commerceservices.search.solrfacetsearch.provider.impl.CategoryNameValueProvider"
+        parent="categoryCodeValueProvider" />
+
+</beans>
