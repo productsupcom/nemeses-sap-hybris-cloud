@@ -2,6 +2,10 @@
     "commerceSuiteVersion": "2211",
     "enableImageProcessingService": true,
     "extensions": [
+        "productdataexport",
+        "productdataexportaccelerator",
+        "productdataexportacceleratorbackoffice",
+        "productdataexportbackoffice",
         "cloudmediaconversion",
         "mediaconversionbackoffice"
     ],
