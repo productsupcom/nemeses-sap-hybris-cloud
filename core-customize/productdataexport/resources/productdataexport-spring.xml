@@ -203,6 +203,7 @@
 
     <bean id="productDataDao" class="io.productsup.productdataexport.managing.product.ProductDataDao">
         <constructor-arg name="flexibleSearchService" ref="flexibleSearchService" />
+        <constructor-arg name="modelService" ref="modelService" />
     </bean>
 
     <!-- REST APi related -->

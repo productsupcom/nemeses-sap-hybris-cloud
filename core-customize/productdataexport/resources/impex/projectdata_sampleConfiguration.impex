@@ -2,31 +2,31 @@ INSERT_UPDATE CSVExportConfig;code[unique=true];weightDistanceType;weightDistanc
 ;ideal;1;1
 ;minimal;1;1
 
-INSERT_UPDATE AttributeFieldConfig;code[unique=true];fieldHeader;position;indexedAttributeDescriptorsInternal;fieldFormatterBean;fieldExtractorBean;productType(code);includedInHash[default=false];productCategory(catalogVersion(catalog(id),version),code)
-;attr_brand;brand;0;Product.manufacturerName;defaultFieldFormatter;attributeFieldExtractorStrategy;Product;
-;attr_category;category;0;Product.supercategories[0].name;defaultFieldFormatter;attributeFieldExtractorStrategy;Product;
-;attr_color;attr_color;0;ApparelStyleVariantProduct.style;defaultFieldFormatter;attributeFieldExtractorStrategy;ApparelStyleVariantProduct;
-;attr_condition;condition;0;Product.articleStatus;defaultFieldFormatter;attributeFieldExtractorStrategy;Product;
-;attr_description;description;0;Product.description;defaultFieldFormatter;attributeFieldExtractorStrategy;Product;
-;attr_gender;gender;0;ApparelProduct.genders;defaultFieldFormatter;attributeFieldExtractorStrategy;ApparelProduct;
-;attr_gtin;gtin;0;Product.ean;defaultFieldFormatter;attributeFieldExtractorStrategy;Product;
-;attr_id;id;0;Product.code;defaultFieldFormatter;attributeFieldExtractorStrategy;Product;
-;attr_price;price;0;Product.europe1Prices;minPriceRowFormatter;attributeFieldExtractorStrategy;Product;true;
-;attr_product_review_average;product_review_average;0;Product.averageRating;defaultFieldFormatter;attributeFieldExtractorStrategy;Product;
-;attr_product_review_count;product_review_count;0;Product.numberOfReviews;defaultFieldFormatter;attributeFieldExtractorStrategy;;
-;attr_size;size;0;ApparelSizeVariantProduct.size;defaultFieldFormatter;attributeFieldExtractorStrategy;ApparelSizeVariantProduct;
-;attr_tax;tax;0;Product.europe1Taxes;taxCollectionFormatter;attributeFieldExtractorStrategy;;
-;attr_title;title;0;Product.name;defaultFieldFormatter;attributeFieldExtractorStrategy;Product;
-;attr_sale_price;sale_price;0;Product.europe1Prices;minPriceRowFormatter;attributeFieldExtractorStrategy;Product;true;
-;attr_payment_accepted;payment_accepted;0;Product.deliveryModes.supportedPaymentModes.name;defaultFieldFormatter;attributeFieldExtractorStrategy;Product;
-;attr_payment_notes;payment_notes;0;Product.deliveryModes.supportedPaymentModes.description;defaultFieldFormatter;attributeFieldExtractorStrategy;Product;
+INSERT_UPDATE AttributeFieldConfig;code[unique=true];fieldHeader;indexedAttributeDescriptorsInternal;fieldFormatterBean;fieldExtractorBean;productType(code);includedInHash[default=false];productCategory(catalogVersion(catalog(id),version),code)
+;attr_brand;brand;Product.manufacturerName;defaultFieldFormatter;attributeFieldExtractorStrategy;Product;
+;attr_category;category;Product.supercategories[0].name;defaultFieldFormatter;attributeFieldExtractorStrategy;Product;
+;attr_color;attr_color;ApparelStyleVariantProduct.style;defaultFieldFormatter;attributeFieldExtractorStrategy;ApparelStyleVariantProduct;
+;attr_condition;condition;Product.articleStatus;defaultFieldFormatter;attributeFieldExtractorStrategy;Product;
+;attr_description;description;Product.description;defaultFieldFormatter;attributeFieldExtractorStrategy;Product;
+;attr_gender;gender;ApparelProduct.genders;defaultFieldFormatter;attributeFieldExtractorStrategy;ApparelProduct;
+;attr_gtin;gtin;Product.ean;defaultFieldFormatter;attributeFieldExtractorStrategy;Product;
+;attr_id;id;Product.code;defaultFieldFormatter;attributeFieldExtractorStrategy;Product;
+;attr_price;price;Product.europe1Prices;minPriceRowFormatter;attributeFieldExtractorStrategy;Product;true;
+;attr_product_review_average;product_review_average;Product.averageRating;defaultFieldFormatter;attributeFieldExtractorStrategy;Product;
+;attr_product_review_count;product_review_count;Product.numberOfReviews;defaultFieldFormatter;attributeFieldExtractorStrategy;;
+;attr_size;size;ApparelSizeVariantProduct.size;defaultFieldFormatter;attributeFieldExtractorStrategy;ApparelSizeVariantProduct;
+;attr_tax;tax;Product.europe1Taxes;taxCollectionFormatter;attributeFieldExtractorStrategy;;
+;attr_title;title;Product.name;defaultFieldFormatter;attributeFieldExtractorStrategy;Product;
+;attr_sale_price;sale_price;Product.europe1Prices;minPriceRowFormatter;attributeFieldExtractorStrategy;Product;true;
+;attr_payment_accepted;payment_accepted;Product.deliveryModes.supportedPaymentModes.name;defaultFieldFormatter;attributeFieldExtractorStrategy;Product;
+;attr_payment_notes;payment_notes;Product.deliveryModes.supportedPaymentModes.description;defaultFieldFormatter;attributeFieldExtractorStrategy;Product;
 
-INSERT_UPDATE ClassificationAttributeConfig;code[unique=true];fieldHeader;position;fieldDescriptor(code);fieldFormatterBean;fieldExtractorBean;productType(code);productCategory(catalogVersion(catalog(id),version),code)
-;class_color;color;0;Colour of product, 1766;defaultFieldFormatter;classificationFieldExtractorStrategy;;
-;class_shipping_weight;shipping_weight;0;Package weight, 762;defaultFieldFormatter;classificationFieldExtractorStrategy;Product;
+INSERT_UPDATE ClassificationAttributeConfig;code[unique=true];fieldHeader;fieldDescriptor(code);fieldFormatterBean;fieldExtractorBean;productType(code);productCategory(catalogVersion(catalog(id),version),code)
+;class_color;color;Colour of product, 1766;defaultFieldFormatter;classificationFieldExtractorStrategy;;
+;class_shipping_weight;shipping_weight;Package weight, 762;defaultFieldFormatter;classificationFieldExtractorStrategy;Product;
 
-INSERT_UPDATE SelfReferenceFieldConfig;code[unique=true];fieldHeader;position;fieldFormatterBean;fieldExtractorBean;productType(code);includedInHash[default=false];productCategory(catalogVersion(catalog(id),version),code)
-;self_availability;availability;0;totalStockLevelFieldFormatter;selfReferenceExtractorStrategy;Product;true;
+INSERT_UPDATE SelfReferenceFieldConfig;code[unique=true];fieldHeader;fieldFormatterBean;fieldExtractorBean;productType(code);includedInHash[default=false];productCategory(catalogVersion(catalog(id),version),code)
+;self_availability;availability;totalStockLevelFieldFormatter;selfReferenceExtractorStrategy;Product;true;
 
 INSERT_UPDATE CSVExportFieldConfigRelation;source(code)[unique=true];target(code)[unique=true]
 ;minimal;self_availability
