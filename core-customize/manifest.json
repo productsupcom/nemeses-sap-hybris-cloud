@@ -9,6 +9,45 @@
         "cloudmediaconversion",
         "mediaconversionbackoffice"
     ],
+    "useConfig": {
+        "properties": [
+            {
+                "location": "hybris/config/environments/local-dev.properties",
+                "persona": "development"
+            },
+            {
+                "location": "hybris/config/environments/local-stage.properties",
+                "persona": "staging"
+            },
+            {
+                "location": "hybris/config/environments/local-prod.properties",
+                "persona": "production"
+            },
+            {
+                "location": "hybris/config/environments/common.properties"
+            },
+            {
+                "aspect": "accstorefront",
+                "location": "hybris/config/environments/accstorefront.properties"
+            },
+            {
+                "aspect": "api",
+                "location": "hybris/config/environments/api.properties"
+            },
+            {
+                "aspect": "backoffice",
+                "location": "hybris/config/environments/backoffice.properties"
+            }
+        ],
+        "extensions": {
+            "location": "hybris/config/localextensions.xml",
+            "exclude": [
+                "azurecloudhotfolder",
+                "cloudcommons",
+                "cloudhotfolder"
+            ]
+        }
+    },
     "properties": [
         {
             "key": "lang.packs",
@@ -115,10 +154,6 @@
             "value": "${ccv2.services.jsapps.url.0}"
         },
         {
-            "key": "b2bpunchout.order.verification.enabled",
-            "value": "true"
-        },
-        {
             "key": "b2bcommerce.unitlevelorders.enabled",
             "value": "true"
         },
@@ -144,10 +179,6 @@
                     "value": ""
                 },
                 {
-                    "key": "smartedit.sso.enabled",
-                    "value": "true"
-                },
-                {
                     "key": "xyformsservices.webroot.override",
                     "value": "false"
                 }
@@ -162,59 +193,16 @@
                     "contextPath": "/medias"
                 },
                 {
-                    "name": "adaptivesearchwebservices",
-                    "contextPath": "/adaptivesearchwebservices"
-                },
-                {
                     "name": "backoffice",
                     "contextPath": "/backoffice"
-                },
-                {
-                    "name": "smartedit",
-                    "contextPath": "/smartedit"
-                },
-                {
-                    "name": "smarteditwebservices",
-                    "contextPath": "/smarteditwebservices"
-                },
-                {
-                    "name": "cmssmartedit",
-                    "contextPath": "/cmssmartedit"
-                },
-                {
-                    "name": "cmssmarteditwebservices",
-                    "contextPath": "/cmssmarteditwebservices"
-                },
-                {
-                    "name": "personalizationsmartedit",
-                    "contextPath": "/personalizationsmartedit"
-                },
-                {
-                    "name": "personalizationwebservices",
-                    "contextPath": "/personalizationwebservices"
-                },
-                {
-                    "name": "personalizationpromotionssmartedit",
-                    "contextPath": "/personalizationpromotionssmartedit"
-                },
-                {
-                    "name": "personalizationsearchsmartedit",
-                    "contextPath": "/personalizationsearchsmartedit"
                 },
                 {
                     "name": "cmswebservices",
                     "contextPath": "/cmswebservices"
                 },
                 {
-                    "name": "previewwebservices",
-                    "contextPath": "/previewwebservices"
-                },
-                {
                     "name": "permissionswebservices",
                     "contextPath": "/permissionswebservices"
-                },
-                {
-                    "name": "odata2webservices"
                 },
                 {
                     "name": "orbeonweb",
@@ -243,14 +231,6 @@
                 {
                     "name": "oauth2",
                     "contextPath": "/authorizationserver"
-                },
-                {
-                    "name": "merchandisingsmartedit",
-                    "contextPath": "/merchandisingsmartedit"
-                },
-                {
-                    "name": "merchandisingcmswebservices",
-                    "contextPath": "/merchandisingcmswebservices"
                 }
             ]
         },
@@ -294,10 +274,6 @@
                 {
                     "name": "acceleratorservices",
                     "contextPath": "/acceleratorservices"
-                },
-                {
-                    "name": "b2bpunchout",
-                    "contextPath": "/b2bpunchout"
                 },
                 {
                     "name": "hac",
@@ -373,22 +349,6 @@
                     "value": "x-anonymous-consents"
                 },
                 {
-                    "key": "corsfilter.assistedservicewebservices.allowedOrigins",
-                    "value": "*"
-                },
-                {
-                    "key": "corsfilter.assistedservicewebservices.allowedHeaders",
-                    "value": "origin content-type accept authorization cache-control x-anonymous-consents x-profile-tag-debug x-consent-reference"
-                },
-                {
-                    "key": "corsfilter.assistedservicewebservices.allowedMethods",
-                    "value": "GET HEAD OPTIONS PATCH PUT POST DELETE"
-                },
-                {
-                    "key": "corsfilter.assistedservicewebservices.exposedHeaders",
-                    "value": "x-anonymous-consents"
-                },
-                {
                     "key": "corsfilter.commercewebservices.allowedOrigins",
                     "value": "*"
                 },
@@ -417,10 +377,6 @@
                     "value": "GET"
                 },
                 {
-                    "key": "corsfilter.personalizationwebservices.allowedOrigins",
-                    "value": "*"
-                },
-                {
                     "key": "mockup.payment.label.billTo.region",
                     "value": "billTo_state"
                 },
@@ -439,16 +395,8 @@
                     "contextPath": "/medias"
                 },
                 {
-                    "name": "adaptivesearchwebservices",
-                    "contextPath": "/adaptivesearchwebservices"
-                },
-                {
                     "name": "acceleratorservices",
                     "contextPath": "/acceleratorservices"
-                },
-                {
-                    "name": "b2bpunchout",
-                    "contextPath": "/b2bpunchout"
                 },
                 {
                     "name": "commercewebservices",
@@ -465,34 +413,6 @@
                 {
                     "name": "ywebservices",
                     "contextPath": "/ywebservices"
-                },
-                {
-                    "name": "previewwebservices",
-                    "contextPath": "/previewwebservices"
-                },
-                {
-                    "name": "warehousingwebservices",
-                    "contextPath": "/warehousingwebservices"
-                },
-                {
-                    "name": "couponwebservices",
-                    "contextPath": "/couponwebservices"
-                },
-                {
-                    "name": "assistedservicewebservices",
-                    "contextPath": "/assistedservicewebservices"
-                },
-                {
-                    "name": "ordermanagementwebservices",
-                    "contextPath": "/ordermanagementwebservices"
-                },
-                {
-                    "name": "b2bordermanagementwebservices",
-                    "contextPath": "/b2bordermanagementwebservices"
-                },
-                {
-                    "name": "datahubadapter",
-                    "contextPath": "/datahubadapter"
                 }
             ]
         },
