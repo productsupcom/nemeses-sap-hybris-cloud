@@ -1,0 +1,53 @@
+<hybrisconfig xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:noNamespaceSchemaLocation='../bin/platform/resources/schemas/extensions.xsd'>
+  <extensions>
+    <path dir='${HYBRIS_BIN_DIR}' autoload='false' />
+    <extension name='apiregistrybackoffice' />
+    <extension name='apiregistryservices' />
+    <extension name='electronicsstore' />
+    <extension name='multicountrysampledataaddon' />
+    <extension name='pcmbackofficesamplesaddon' />
+    <extension name='classificationgroupsservices' />
+    <extension name='pcmbackoffice' />
+    <extension name='backoffice' />
+    <extension name='backofficesolrsearch' />
+    <extension name='platformbackoffice' />
+    <extension name='ybackoffice' />
+    <!--<extension name='yacceleratorbackoffice' />-->
+    <extension name='yacceleratorcore' />
+    <extension name='yacceleratorstorefront' />
+    <extension name='basecommerce' />
+    <extension name='basecommercebackoffice' />
+    <extension name='payment' />
+    <extension name='commercefacades' />
+    <extension name='commerceservices' />
+    <extension name='commerceservicesbackoffice' />
+    <extension name='commercewebservices' />
+    <extension name='commercewebservicescommons' />
+    <extension name='commercewebservicestests' />
+    <extension name='yocc' />
+    <extension name='yocctests' />
+    <extension name='acceleratorocc' />
+    <extension name='addonsupport' />
+    <extension name='npmancillary' />
+    <extension name='adminapi' />
+    <extension name='deltadetection' />
+    <extension name='solrfacetsearch' />
+    <extension name='solrfacetsearchbackoffice' />
+    <extension name='solrserver' />
+    <extension name='cmsbackoffice' />
+    <extension name='cmsfacades' />
+    <extension name='cmsocc' />
+    <extension name='cmswebservices' />
+    <extension name='webservicescommons' />
+    <extension name='ywebservices' />
+
+<!-- Sample Extensions -->
+    <extension name='spartacussampledata' />
+
+<!-- If you want to test Cloud Hot Folders locally download the extensions from https://launchpad.support.sap.com/#/notes/2817992 and uncomment the following -->
+    <!--<extension name='azurecloudhotfolder' />
+    <extension name='cloudcommons' />
+    <extension name='cloudhotfolder' />-->
+
+  </extensions>
+</hybrisconfig>
